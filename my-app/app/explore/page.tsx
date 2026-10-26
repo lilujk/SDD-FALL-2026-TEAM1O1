@@ -1,3 +1,20 @@
-export default function Explore() {
-  return <h1>Explore</h1>;
+export default function Explore({}) {
+
+
+
+  return <div>
+
+    <div>
+      <nav
+        className=""
+      >
+
+      <div>
+
+      </div>
+
+      </nav>
+    </div>
+
+  </div>;
 }
