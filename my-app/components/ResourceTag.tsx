@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 
-type ResourceTagType = "medium" | "price" | "topical" | "warning";
+export type ResourceTagType = "medium" | "price" | "topical" | "warning";
 
-type ResourceTagProps = {
+export type ResourceTagProps = {
   name: string;
   type: ResourceTagType;
 }
@@ -16,11 +16,10 @@ const backgroundColors: Record<ResourceTagType, string> = {
   warning: "bg-red-100",
 }
 
-export default function ResourceTag() {
-
+export default function ResourceTag({ name, type }: ResourceTagProps) {
   return (
-    <div className={`rounded-[2vw] px-5 py-2 text-center text-black ${backgroundColors[type]}`}>
-        <p>Colors</p>
+    <div className={`rounded-[0.5vw] px-2 py-1 text-center text-black ${backgroundColors[type]}`}>
+      <p>{name}</p>
     </div>
   );
 }

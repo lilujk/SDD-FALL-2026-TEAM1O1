@@ -1,28 +1,30 @@
 "use client";
 
-import Link from "next/link";
-import ResourceTag from "./ResourceTag";
+import ResourceTag, { type ResourceTagProps } from "./ResourceTag";
 
-export default function ResourceListing() {
+
+type ResourceListingProps = {
+  title: string;
+  description: string;
+  tags: ResourceTagProps[];
+};
+
+export default function ResourceListing({title, description, tags}: ResourceListingProps) {
+
+const croppedDescription = description.length > 250 ? `${description.slice(0, 247)}...` : description;
 
   return (
 
-    <div className="flex flex-col justify-between items-center p-4 bg-gray-800 text-black">
-        <h1 className="flex items-center">
-            Poline -- Esoteric Color Palette Generation Library 
-        </h1>
+    <div className="flex flex-col p-4 text-black border-1 border-solid rounded-xl border-gray-300">
+        <h1 className="text-2xl">{title}</h1>
 
-        <div className="flex items-center gap-6">
-            <ResourceTag></ResourceTag>
-            <ResourceTag></ResourceTag>
-            <ResourceTag></ResourceTag>
-            <ResourceTag></ResourceTag>
-            <ResourceTag></ResourceTag>
+        <div className="mt-2 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+            <ResourceTag key={tag.name} name={tag.name} type={tag.type} />
+            ))}
         </div>
 
-        <p className="text-black">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum....
-        </p>
+        <p className="text-black mt-2">{croppedDescription}</p>
     </div>
   );
 }
