@@ -10,8 +10,8 @@ public class ResourceController {
 
     }
 
-    @PostMapping(path = "/resource/{id}")
-    public void postResource(@PathVariable int id){
+    @PostMapping(path = "/resource/{id}", consumes = "application/json")
+    public void postResource(@PathVariable int id, @RequestBody Resource resource){
 
     }
 
@@ -20,4 +20,15 @@ public class ResourceController {
 
     }
 
+    @DeleteMapping(path = "/resource/{id}")
+    public void deleteResource(@PathVariable int id){
+
+    }
+
+    @PutMapping(path = "/resource/{id}/like")
+    public void likeResource(@PathVariable int id){
+
+    }
+     
+    
 }
