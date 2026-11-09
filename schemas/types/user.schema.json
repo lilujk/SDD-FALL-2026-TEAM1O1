@@ -1,0 +1,23 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$comment": "An object representing a website user",
+	"type": "object",
+	"properties": {
+		"ID": {
+			"$ref": "./ID.schema.json"
+		},
+		"username": {
+			"type": "string"
+		},
+		"image": {
+			"type": "string"
+		},
+		"bio": {
+			"type": "string"
+		},
+		"created": {
+			"$ref": "./timestamp.schema.json"
+		}
+	},
+	"required": [ "ID", "username", "image", "bio", "created" ]
+}

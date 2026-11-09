@@ -1,0 +1,6 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$comment": "An enum type defining the access level of linked resources",
+	"type": "integer",
+	"enum": [ 0, 1, 2, 3 ]
+}

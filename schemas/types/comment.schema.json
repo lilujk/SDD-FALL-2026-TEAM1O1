@@ -1,0 +1,26 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$comment": "An object representing a comment on a resource posting",
+	"type": "object",
+	"properties": {
+		"ID": {
+			"$ref": "./ID.schema.json"
+		},
+		"resource": {
+			"$ref": "./ID.schema.json"
+		},
+		"author": {
+			"$ref": "./ID.schema.json"
+		},
+		"comment": {
+			"type": "string"
+		},
+		"likes": {
+			"type": "integer"
+		},
+		"posted": {
+			"$ref": "./timestamp.schema.json"
+		}
+	},
+	"required": [ "ID", "resource", "author", "comment", "likes", "posted" ]
+}

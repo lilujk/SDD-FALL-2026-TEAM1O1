@@ -1,0 +1,30 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$comment": "An object representing a resource folder",
+	"type": "object",
+	"properties": {
+		"ID": {
+			"$ref": "./ID.schema.json"
+		},
+		"creator": {
+			"$ref": "./ID.schema.json"
+		},
+		"title": {
+			"type": "string"
+		},
+		"description": {
+			"type": "string"
+		},
+		"contents": {
+			"type": "array",
+			"items": {
+				"$ref": "./ID.schema.json"
+			},
+			"uniqueItems": true
+		},
+		"created": {
+			"$ref": "./timestamp.schema.json"
+		}
+	},
+	"required": [ "ID", "creator", "title", "description", "contents", "created" ]
+}

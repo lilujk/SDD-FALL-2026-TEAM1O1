@@ -1,0 +1,61 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$comment": "An object representing a resource posting",
+	"type": "object",
+	"properties": {
+		"ID": {
+			"$ref": "./ID.schema.json"
+		},
+		"title": {
+			"type": "string"
+		},
+		"author": {
+			"$ref": "./ID.schema.json"
+		},
+		"tags": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"uniqueItems": true
+		},
+		"warnings": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"uniqueItems": true
+		},
+		"access": {
+			"$ref": "./accessLevel.schema.json"
+		},
+		"medium": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"uniqueItems": true
+		},
+		"description": {
+			"type": "string"
+		},
+		"link": {
+			"type": "string",
+			"$comment": "URL"
+		},
+		"thumbnail": {
+			"type": "string",
+			"$comment": "URLPath"
+		},
+		"approved": {
+			"type": "boolean"
+		},
+		"likes": {
+			"type": "integer"
+		},
+		"posted": {
+			"$ref": "./timestamp.schema.json"
+		}
+	},
+	"required": [ "ID", "title", "author", "tags", "warnings", "access", "medium", "description", "link", "thumbnail", "approved", "likes", "posted" ]
+}
