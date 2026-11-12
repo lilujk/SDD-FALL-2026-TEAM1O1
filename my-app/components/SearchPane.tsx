@@ -43,7 +43,7 @@ export default function SearchPane() {
         ))}
 
         <div className="flex flex-row">
-            <button className="bg-black text-white text-sm rounded-sm py-1 px-2 ml-3 mt-3 cursor-pointer">Search</button>
+            <button className="bg-black text-white text-sm rounded-sm py-1 px-2 ml-3 mt-3 mb-5 cursor-pointer">Search</button>
         </div>
       </div>
     </div>
