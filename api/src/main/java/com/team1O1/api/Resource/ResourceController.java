@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +29,15 @@ public class ResourceController {
     private ResourceRepository resourceRepository;
     private TagRepository tagRepository;
 
+    private static ResourceView toView(Resource r) {
+        return new ResourceView(r.getId(), r.getTitle(), r.getUserId(), r.getDescription(),
+                r.getLink(), Boolean.TRUE.equals(r.getApproved()), r.getAccess(), r.getCreated());
+    }
+
     private static final LocalDateTime NOW = LocalDateTime.of(2025, 11, 13, 0, 0);
+
+    public record ResourcePatch(String title, String description, String link, Integer free) {
+    }
 
     public record ResourceView(
             @JsonProperty("Id") Long id,
@@ -69,6 +78,29 @@ public class ResourceController {
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
+    // PATCH /resource/{id} -> 200 with the updated resource, 404 if it doesn't
+    // exist
+    @PatchMapping(path = "/{id}", consumes = "application/json")
+    public ResponseEntity<ResourceView> updateResource(@PathVariable("id") Long id,
+            @RequestBody ResourcePatch patch) {
+        Optional<Resource> found = resourceRepository.findById(id);
+        if (found.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Resource r = found.get();
+
+        if (patch.title() != null)
+            r.setTitle(patch.title());
+        if (patch.description() != null)
+            r.setDescription(patch.description());
+        if (patch.link() != null)
+            r.setLink(patch.link());
+        if (patch.free() != null)
+            r.setAccess(patch.free());
+
+        Resource saved = resourceRepository.save(r);
+        return ResponseEntity.ok(toView(saved));
+    }
     // @PatchMapping(path = "/{id}", consumes = "application/json")
     // public String updateResource(@PathVariable long id, @RequestBody Resource
     // resource) {
