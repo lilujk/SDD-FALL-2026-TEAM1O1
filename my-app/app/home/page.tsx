@@ -92,7 +92,7 @@ export default function Home() {
         <Link 
           className="w-5/6 mt-10 border-2 border-solid border-black rounded-lg p-4 bg-blue-100"
           href="../account-management/signup">
-          <h1 className="text-black">Sign-Up</h1>
+          <h1 className="text-black">Sign Up</h1>
         </Link>
       </div>
     </div>

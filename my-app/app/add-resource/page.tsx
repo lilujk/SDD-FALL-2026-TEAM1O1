@@ -4,8 +4,6 @@ import { useState } from "react";
 
 import ResourceTag, { type ResourceTagProps } from "@/components/ResourceTag";
 
-import FormCheckboxInput from "@/components/FormCheckbox";
-
 export default function AddResource() {
   const [description, setDescription] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
