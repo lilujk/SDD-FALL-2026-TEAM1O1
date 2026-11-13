@@ -1,7 +1,7 @@
 package com.team1O1.api.Tag;
 
-
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface TagRepository extends JpaRepository<Tag, Integer> {
 
     // Find a tag by its name
-    List<Tag> findByName(String name);
+    Optional<Tag> findByName(String name);
 
     // Check whether a tag exists by name
     boolean existsByName(String name);
