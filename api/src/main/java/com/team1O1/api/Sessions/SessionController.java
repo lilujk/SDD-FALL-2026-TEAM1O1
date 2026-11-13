@@ -41,7 +41,7 @@ public class SessionController {
         }
 
         // Return session data to the client
-            return new ResponseEntity<>("{\"session\": true}", HttpStatus.OK);
+            return new ResponseEntity<>("{\"session\": true, \"userId\": 12345678}", HttpStatus.OK);
     }
 
     // Invalidate the session

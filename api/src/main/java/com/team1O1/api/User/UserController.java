@@ -4,7 +4,13 @@ import java.time.LocalDateTime;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
@@ -16,11 +22,11 @@ public class UserController {
 
     /** User. image is always null for now. created: seconds since the Unix epoch. Passwords are never returned. */
     public record UserView(
-        @JsonProperty("ID") Integer id, 
-        String username, 
-        String email,
-        String password,
-        String bio, 
+        @JsonProperty("Id") Integer id, 
+        @JsonProperty("Username") String username, 
+        @JsonProperty("email") String email,
+        @JsonProperty("password") String password,
+        @JsonProperty("bio") String bio, 
         LocalDateTime created) {}
 
 
@@ -33,10 +39,10 @@ public class UserController {
 
     //add thing in mapping to indicate it generates json
     @GetMapping(path = "/{id}")
-    public ResponseEntity<UserView> getUser(@PathVariable int id){
+    public ResponseEntity<String> getUser(@PathVariable int id){
         // TODO: implement
          UserView temp = new UserView(id, "JohnCola", "jc@gmail.com","pass", "epic bio", NOW);
-         return ResponseEntity.status(HttpStatus.CREATED).body(temp);
+         return ResponseEntity.status(HttpStatus.CREATED).body("{\"Id\": 12345678, \"username\": \"JohnCola\",\"email\":\"someEmail@email.com\",\"password\":\"password\",\"bio\":\"awesome\",\"created\":\"someTime\"}");
     }
 
     // @PatchMapping(path = "/{id}", consumes = "application/json")
