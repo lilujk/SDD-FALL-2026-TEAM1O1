@@ -5,7 +5,14 @@ import { useState } from "react";
 
 import ResourceTag from "@/components/ResourceTag";
 import Comment from "@/components/Comment";
-import ResourceListing from "@/components/ResourceListing";
+
+import WriteCommentModal from "@/components/WriteCommentModal";
+
+type Review = {
+  author: string;
+  comment: string;
+  likecount: number;
+};
 
 /* TEMP: delete once backend is connected */
 const tags = [
@@ -32,6 +39,19 @@ export default function IndividualResource() {
   const [isSaved, setIsSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(372);
+
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [reviewCount, setReviewCount] = useState(numReviews);
+  const [visibleComments, setVisibleComments] = useState<Review[]>([...comments]);
+
+  function addReview(comment: string) {
+    setVisibleComments((current) => [
+      ...current,
+      { author: "You", comment, likecount: 0 },
+    ]);
+    setReviewCount((count) => count + 1);
+    setReviewModalOpen(false);
+  }
 
   return <div className="mx-auto max-w-5xl px-4 py-6">
   <Link href="/explore" className="text-black py-2 px-5 border-1 border-solid rounded-sm">← Back to search</Link>
@@ -105,16 +125,33 @@ export default function IndividualResource() {
         <h2 className="text-black font-bold">WHAT PEOPLE ARE SAYING</h2>
         <div className="my-4 flex flex-row justify-between align-items">
           <p className="underline text-black mt-1">{numReviews} reviews</p>
-            <button className="text-black py-2 px-6 border-1 border-solid rounded-sm cursor-pointer">Leave a review 🖉</button>
+          <button
+            type="button"
+            onClick={() => setReviewModalOpen(true)}
+            className="cursor-pointer rounded-sm border border-solid px-6 py-2 text-black"
+            >
+            Leave a review 🖉
+          </button>
         </div>
         <div className="mt-2 flex flex-col gap-2">
-          {comments.map((comment) => (
-            <Comment key={comment.author} author={comment.author} comment={comment.comment} likecount={comment.likecount}/>
+          {visibleComments.map((comment, index) => (
+            <Comment
+              key={`${comment.author}-${index}`}
+              author={comment.author}
+              comment={comment.comment}
+              likecount={comment.likecount}
+            />
           ))}
         </div>
         <button className="w-fit self-center mt-4 text-black py-2 px-8 border-1 border-solid rounded-sm cursor-pointer">Load more reviews</button>
       </div>
     </div>
   </div>
+  {reviewModalOpen && (
+    <WriteCommentModal
+      onSubmit={addReview}
+      onClose={() => setReviewModalOpen(false)}
+    />
+  )}
 </div>
 }
