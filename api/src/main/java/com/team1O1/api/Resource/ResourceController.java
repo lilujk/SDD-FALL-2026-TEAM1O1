@@ -26,22 +26,25 @@ public class ResourceController {
     public record ResourceView(
             @JsonProperty("Id") Long id,
             @JsonProperty("title") String title,
-            @JsonProperty("userId") String email,
-            @JsonProperty("description") String password,
-            @JsonProperty("bio") String bio,
+            @JsonProperty("userId") Long userId,
+            @JsonProperty("description") String description,
+            @JsonProperty("link") String link,
+            @JsonProperty("approved") boolean approved,
+            @JsonProperty("free") Integer free,
             LocalDateTime created) {
     }
 
     @GetMapping(path = "/{id}")
     public String getResource(@PathVariable long id) {
         return "{\"Id\": 12345678,\"title\": \"Google Fonts\",\"userId\":\"1\",\"description\":\"lovely fonts\",\"link\":\"google_example.com\",\"approved\":\"true\", \"free\":\"0\", \"created\":\"someTime\"}";
-
     }
 
     @PostMapping(path = "/{id}", consumes = "application/json")
     public String postResource(@PathVariable long id, @RequestBody Resource resource) {
-        return "TODO: post resource";
-
+        // return "TODO: post resource";
+        ResourceView created = new ResourceView(resource.getId(), resource.getTitle(), resource.getUserId(),
+                resource.getDescription(), resource.getLink(), resource.getApproved(), resource.getAccess(), NOW);
+        return "temp fix me";
     }
 
     // @PatchMapping(path = "/{id}", consumes = "application/json")
