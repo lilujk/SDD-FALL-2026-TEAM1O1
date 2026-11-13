@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function NavBar() {
   return (
-    <nav className="flex justify-between items-center p-4 bg-gray-800">
+    <nav className="flex justify-between items-center p-4 text-black">
       <Link href="/home" className="text-2xl font-bold hover:text-gray-300">
         ART 1O1
       </Link>
