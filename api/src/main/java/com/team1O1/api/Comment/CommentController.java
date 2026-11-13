@@ -8,4 +8,8 @@ public class CommentController {
     public void postComment(@PathVariable int id, @RequestBody Comment Comment){
 
     }  
+    @PostMapping(path = "/resource/{id}/comment/like", consumes = "application/json")
+    public void likeComment(@PathVariable int id, @RequestBody Comment Comment){
+
+    }  
 }
