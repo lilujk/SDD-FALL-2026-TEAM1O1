@@ -21,19 +21,19 @@ public class FolderController{
             List<Integer> contents,
             LocalDateTime created) {}
 
-    @PostMapping(path = "/{userId}/folder", consumes = "application/json")
-    public void postFolder(@PathVariable int userId, @RequestBody Folder folder){
+    // @PostMapping(path = "/{userId}/folder", consumes = "application/json")
+    // public void postFolder(@PathVariable int userId, @RequestBody Folder folder){
 
-    }  
-    @GetMapping(path = "/{userId}/folder/{id}")
-    public void getFolder(@PathVariable int userId, @PathVariable int id){
-        // TODO: implement
-        // return List.of(
-        //         new FolderView(1, 123, "Midterm prep" List.of(1, 2), NOW ),
-        //         new FolderView(2, 123, "Read later",  List.of(3), NOW ));
+    // }  
+    // @GetMapping(path = "/{userId}/folder/{id}")
+    // public void getFolder(@PathVariable int userId, @PathVariable int id){
+    //     // TODO: implement
+    //     // return List.of(
+    //     //         new FolderView(1, 123, "Midterm prep" List.of(1, 2), NOW ),
+    //     //         new FolderView(2, 123, "Read later",  List.of(3), NOW ));
 
    
-    } 
+    // } 
 
     @PatchMapping(path = "/{userId}/folder/{id}")
     public void updateFolder(@PathVariable int userId, @PathVariable int id){

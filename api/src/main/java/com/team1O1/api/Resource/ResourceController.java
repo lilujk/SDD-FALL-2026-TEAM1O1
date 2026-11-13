@@ -26,6 +26,8 @@ import com.team1O1.api.ResourceLikes.ResourceLikeRepository;
 import com.team1O1.api.SavedResource.SavedResource;
 import com.team1O1.api.SavedResource.SavedResourcedRepository;
 import com.team1O1.api.Taggings.TaggingsRepository;
+import com.team1O1.api.User.User;
+import com.team1O1.api.User.UserRepository;
 import com.team1O1.api.User.UserController.UserView;
 
 @RestController
@@ -35,10 +37,11 @@ public class ResourceController {
     @Autowired
     private ResourceRepository resourceRepository;
     private TagRepository tagRepository;
+    private UserRepository userRepository;
     @Autowired
     private HistoryRepository historyRepository;
 
-    private static ResourceView toView(Resource r) {
+    private ResourceView toView(Resource r) {
         return new ResourceView(r.getId(), r.getTitle(), r.getUserId(), r.getDescription(),
                 r.getLink(), Boolean.TRUE.equals(r.getApproved()), r.getAccess(), r.getCreated());
     }
@@ -86,31 +89,34 @@ public class ResourceController {
     }
 
     // // find by id ****OLD
-    // @GetMapping(path = "/{id}")
-    // public ResponseEntity<ResourceView> getResource(@PathVariable Long id) {
-    // Optional<Resource> r = resourceRepository.findById(id);
-    // if (r.isEmpty()) {
-    // return ResponseEntity.status(HttpStatus.NOT_FOUND)
-    // .body(new ResourceView(-1L, "", -1L, "", "", false, 0, LocalDateTime.now()));
-    // }
-    // ResourceView rv = new ResourceView(r.get().getId(), r.get().getTitle(),
-    // r.get().getUserId(), r.get()
-    // .getDescription(), r.get().getLink(), r.get().getApproved(),
-    // r.get().getAccess(), r.get().getCreated());
-    // return ResponseEntity.status(HttpStatus.CREATED).body(rv);
-    // }
-    @GetMapping("/{id}")
-    public ResponseEntity<ResourceView> getResource(@PathVariable("id") Long id,
-            @RequestParam(name = "userId", required = false) Long userId) {
-        Optional<Resource> found = resourceRepository.findById(id);
-        if (found.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        if (userId != null) {
-            recordView(userId, id);
-        }
-        return ResponseEntity.ok(toView(found.get()));
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<ResourceView> getResource(@PathVariable Long id) {
+    Optional<Resource> r = resourceRepository.findById(id);
+    if (r.isEmpty()) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    .body(new ResourceView(-1L, "", -1L, "", "", false, 0, LocalDateTime.now()));
     }
+    ResourceView rv = new ResourceView(r.get().getId(), r.get().getTitle(),
+    r.get().getUserId(), r.get()
+    .getDescription(), r.get().getLink(), r.get().getApproved(),
+    r.get().getAccess(), r.get().getCreated());
+            if (r.get().getUserId() != null) {
+            recordView(r.get().getUserId(), id);
+        }
+    return ResponseEntity.status(HttpStatus.CREATED).body(rv);
+    }
+    // @GetMapping("/{id}")
+    // public ResponseEntity<ResourceView> getResource(@PathVariable("id") Long id,
+    //         @RequestParam(name = "userId", required = false) Long userId) {
+    //     Optional<Resource> found = resourceRepository.findById(id);
+    //     if (found.isEmpty()) {
+    //         return ResponseEntity.notFound().build();
+    //     }
+    //     if (userId != null) {
+    //         recordView(userId, id);
+    //     }
+    //     return ResponseEntity.ok(toView(found.get()));
+    // }
 
     @PostMapping(path = "", consumes = "application/json")
     public ResponseEntity<String> postResource(@RequestBody Resource resource) {
@@ -167,6 +173,17 @@ public class ResourceController {
     @GetMapping("/user/{userId}")
     public List<Long> findResourceByUser(@PathVariable("userId") Long userId) {
         return resourceRepository.findByUserId(userId).stream()
+                .map(Resource::getId)
+                .toList();
+    }
+
+    @GetMapping("/author/{name}")
+    public List<Long> findResourceByAuthor(@PathVariable("name") String name) {
+        List<User> l = userRepository.findByUsername(name);
+        if (l.size()==0){
+            return List.of();
+        }
+        return resourceRepository.findByUserId(l.getFirst().getId()).stream()
                 .map(Resource::getId)
                 .toList();
     }

@@ -1,5 +1,7 @@
 package com.team1O1.api.SavedResource;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -21,6 +23,8 @@ public class SavedResource {
     @Column(name = "folder_id", nullable = false, updatable = false)
     private Long folderId;
 
+    // @Column(name = "created", nullable = false)
+    // private LocalDateTime created;
     
 
     // Constructors
@@ -31,6 +35,7 @@ public class SavedResource {
         this.userId = userId;
         this.resourceId = resourceId;
         this.folderId =folderId;
+        // this.created = LocalDateTime.now();
     }
 
     // Getters and Setters

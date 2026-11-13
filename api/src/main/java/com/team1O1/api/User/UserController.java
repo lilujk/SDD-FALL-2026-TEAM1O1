@@ -87,8 +87,8 @@ public class UserController {
         // \"JohnCola\",\"email\":\"someEmail@email.com\",\"password\":\"password\",\"bio\":\"awesome\",\"created\":\"someTime\"}");
     }
 
-    @GetMapping(path = "/folder/{id}")
-    public List<Long> getfolder(@PathVariable("id") Long id, @RequestParam("userId") Long userId) {
+    @GetMapping(path = "{userId}/folder/{id}")
+    public List<Long> getfolder(@PathVariable("id") Long id, @PathVariable ("userId") Long userId) {
         return savedRepository.findByUserId(userId).stream()
                 .map(SavedResource::getResourceId)
                 .toList();
