@@ -2,6 +2,7 @@ package com.team1O1.api.Resource;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.team1O1.api.User.UserController.UserView;
 
 @RestController
 @RequestMapping("/resource")
@@ -37,15 +39,19 @@ public class ResourceController {
     }
 
     @GetMapping(path = "/{id}")
-    public String getResource(@PathVariable long id) {
+    public ResponseEntity<ResourceView> getResource(@PathVariable Long id) {
         // return "{\"Id\": 12345678,\"title\": \"Google
         // Fonts\",\"userId\":\"1\",\"description\":\"lovely
         // fonts\",\"link\":\"google_example.com\",\"approved\":\"true\",
         // \"free\":\"0\", \"created\":\"someTime\"}";
-        Resource temp = resourceRepository.findById(id);
-        ResourceView rv = new ResourceView(temp.getId(), temp.getTitle(), temp.getUserId(), temp.getDescription(),
-                temp.getLink(), temp.getApproved(), temp.getAccess(), temp.getCreated());
-        return "";
+        Optional<Resource> r = resourceRepository.findById(id);
+        if (r.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResourceView(-1L, "", -1L, "", "", false, 0, LocalDateTime.now()));
+        }
+        ResourceView rv = new ResourceView(r.get().getId(), r.get().getTitle(), r.get().getUserId(), r.get()
+                .getDescription(), r.get().getLink(), r.get().getApproved(), r.get().getAccess(), r.get().getCreated());
+        return ResponseEntity.status(HttpStatus.CREATED).body(rv);
     }
 
     @PostMapping(path = "/{id}", consumes = "application/json")
