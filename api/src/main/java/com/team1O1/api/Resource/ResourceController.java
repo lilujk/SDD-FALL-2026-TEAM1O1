@@ -1,10 +1,12 @@
 package com.team1O1.api.Resource;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +38,14 @@ public class ResourceController {
 
     @GetMapping(path = "/{id}")
     public String getResource(@PathVariable long id) {
-        return "{\"Id\": 12345678,\"title\": \"Google Fonts\",\"userId\":\"1\",\"description\":\"lovely fonts\",\"link\":\"google_example.com\",\"approved\":\"true\", \"free\":\"0\", \"created\":\"someTime\"}";
+        // return "{\"Id\": 12345678,\"title\": \"Google
+        // Fonts\",\"userId\":\"1\",\"description\":\"lovely
+        // fonts\",\"link\":\"google_example.com\",\"approved\":\"true\",
+        // \"free\":\"0\", \"created\":\"someTime\"}";
+        Resource temp = resourceRepository.findById(id);
+        ResourceView rv = new ResourceView(temp.getId(), temp.getTitle(), temp.getUserId(), temp.getDescription(),
+                temp.getLink(), temp.getApproved(), temp.getAccess(), temp.getCreated());
+        return "";
     }
 
     @PostMapping(path = "/{id}", consumes = "application/json")
@@ -53,10 +62,15 @@ public class ResourceController {
     // return "TODO: update resource";
     // }
 
-    // @DeleteMapping(path = "/{id}")
-    // public String deleteResource(@PathVariable long id) {
-    // return "TODO: delete resource";
-    // }
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<String> deleteResource(@PathVariable Long id) {
+        if (!resourceRepository.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
+        }
+
+        resourceRepository.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Resource deleted");
+    }
 
     // @PutMapping(path = "/{id}/like")
     // public String likeResource(@PathVariable long id) {
