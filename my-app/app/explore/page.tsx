@@ -28,6 +28,7 @@ const description3 =
 const tags3 = [
   { name: "Figure Drawing", type: "topical" },
   { name: "Anatomy", type: "topical" },
+  { name: "Sketching", type: "topical" },
   { name: "Web Tool", type: "medium" },
   { name: "Free", type: "price" },
   { name: "Nudity", type: "warning" },
