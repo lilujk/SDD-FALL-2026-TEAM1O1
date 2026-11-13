@@ -1,5 +1,9 @@
 package com.team1O1.api.Folder;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,7 +19,7 @@ public class FolderController{
             Integer creator,
             String title,
             List<Integer> contents,
-            DateTime created) {}
+            LocalDateTime created) {}
 
     @PostMapping(path = "/{userId}/folder", consumes = "application/json")
     public void postFolder(@PathVariable int userId, @RequestBody Folder folder){
@@ -24,9 +28,10 @@ public class FolderController{
     @GetMapping(path = "/{userId}/folder/{id}")
     public void getFolder(@PathVariable int userId, @PathVariable int id){
         // TODO: implement
-        return List.of(
-                new FolderView(1, creatorId, "Midterm prep", "Everything for the Nov midterm", List.of(1, 2), NOW - 604800),
-                new FolderView(2, creatorId, "Read later", null, List.of(3), NOW - 86400));
+        // return List.of(
+        //         new FolderView(1, 123, "Midterm prep" List.of(1, 2), NOW ),
+        //         new FolderView(2, 123, "Read later",  List.of(3), NOW ));
+
    
     } 
 
@@ -37,9 +42,9 @@ public class FolderController{
 
      /** DELETE /folder/{folderID}. Requires login; 403 unless you created the folder. */
     @DeleteMapping("/{userId}/folder/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("folderId") Integer folderId) {
+    public void delete(@PathVariable("folderId") Integer folderId) {
         // TODO: implement
-        return ResponseEntity.noContent().build();
-    }
+        // return ResponseEntity.noContent().build();
+    }   
 
 }

@@ -1,6 +1,12 @@
 package com.team1O1.api.User;
 
+import java.time.LocalDateTime;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 @RestController
 @RequestMapping ("/user")
@@ -15,21 +21,22 @@ public class UserController {
         String email,
         String password,
         String bio, 
-        DateTime created) {}
+        LocalDateTime created) {}
 
 
     @PostMapping(path = "", consumes = "application/json")
-    public void postUser(@PathVariable int id, @RequestBody User user){
+    public ResponseEntity<UserView> postUser(@PathVariable int id, @RequestBody User user){
         // TODO: implement
-        UserView created = new UserView(100, "johnCola", "jc@gmail.com", "pass", "epic bio", NOW);
+        UserView created = new UserView(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), user.getBio(), NOW);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     //add thing in mapping to indicate it generates json
     @GetMapping(path = "/{id}")
-    public void getUser(@PathVariable int id){
+    public ResponseEntity<UserView> getUser(@PathVariable int id){
         // TODO: implement
-         return new UserView(123, "JohnCola", "jc@gmail.com", "epic bio", NOW);
+         UserView temp = new UserView(id, "JohnCola", "jc@gmail.com","pass", "epic bio", NOW);
+         return ResponseEntity.status(HttpStatus.CREATED).body(temp);
     }
 
     // @PatchMapping(path = "/{id}", consumes = "application/json")

@@ -1,6 +1,14 @@
 package com.team1O1.api.Comment;
 
+import java.time.LocalDateTime;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.team1O1.api.Resource.ResourceRepository;
 
 /**
  * Comments live on their own route, /api/v1/comment, instead of under /resource as in the API doc.
@@ -17,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     
     /** comments.parent_id is NOT NULL, top-level comments store 0. */
-    public static final Integer NO_PARENT = 0L;
+    public static final Integer NO_PARENT = 0;
     private final CommentRepository comments;
     private final ResourceRepository resources;
 
@@ -33,11 +41,11 @@ public class CommentController {
             Integer author,
             String comment,
             Integer likes,
-            DateTime posted,
+            LocalDateTime posted,
             @JsonInclude(JsonInclude.Include.NON_NULL) Boolean liked) {}
 
     /** Body of POST /comment. "resourceId" is accepted as another name for "resource". */
-    public record CommentRequest(@JsonAlias("resourceId") Integer resource, String comment) {}
+    // public record CommentRequest(@JsonAlias("resourceId") Integer resource, String comment) {}
 
     public CommentController(CommentRepository comments, ResourceRepository resources) {
         this.comments = comments;
@@ -47,9 +55,9 @@ public class CommentController {
     // ---------- routes ----------
     
     @PostMapping(path = "{userID}/resource/{id}/comment", consumes = "application/json")
-    public void postComment(@PathVariable int id, @RequestBody Comment Comment){
+    public ResponseEntity<CommentView> postComment(@PathVariable int id, @RequestBody Comment comment){
         // TODO: implement
-        CommentView created = new CommentView(100, body.resource(), 1, body.comment(), 0, NOW, false);
+        CommentView created = new CommentView(100, comment.getResourceId(), 1, comment.getCommentContent(), 0, NOW, false);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }  
 
