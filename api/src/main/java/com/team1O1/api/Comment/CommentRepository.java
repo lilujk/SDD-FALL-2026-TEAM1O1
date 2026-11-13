@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
+    List<Comment> findByResourceId(Integer resourceId);
+    List<Comment> findByUserId(Integer userId);
+    List<Comment> findByParentId(Integer parentId);
+
 }
