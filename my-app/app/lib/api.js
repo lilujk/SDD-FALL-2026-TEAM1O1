@@ -22,4 +22,7 @@ export const deleteResource = (resourceID) => api.delete(`/resource/${resourceID
 
 export const putLike = (resourceID, liked) => api.put(`/resource/${resourceID}/like`, liked);
 
+export const getTagResources = (tagName) => api.get(`/resource/tag/${tagName}`);
+export const getAuthorResources = (author) => api.get(`resource/author/${author}`);
+
 export default api;

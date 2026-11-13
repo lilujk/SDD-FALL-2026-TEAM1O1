@@ -43,6 +43,8 @@ export default function IndividualResource() {
   const [likes, setLikes] = useState(0);
   const [price, setPrice] = useState("");
 
+
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
@@ -113,38 +115,38 @@ export default function IndividualResource() {
   if (loading) return;
 
   const nextLiked = !isLiked;
-  let updatedOptimistically = false;
+    let updatedOptimistically = false;
 
-  setError("");
-  setLoading(true);
+    setError("");
+    setLoading(true);
 
-  try {
-    const { session } = await checkSession();
+    try {
+      const { session } = await checkSession();
 
-    if (!session) {
-      router.push("/account-management/login");
-      return;
+      if (!session) {
+        router.push("/account-management/login");
+        return;
+      }
+
+      setIsLiked(nextLiked);
+      setLikes((count) => count + (nextLiked ? 1 : -1));
+      updatedOptimistically = true;
+
+      const { data: newLikeCount } = await putLike(resourceId, nextLiked);
+      setLikes(newLikeCount);
+    } catch (err) {
+      console.error("Like request failed:", err);
+
+      if (updatedOptimistically) {
+        setIsLiked(!nextLiked);
+        setLikes((count) => count + (nextLiked ? -1 : 1));
+      }
+
+      setError(err instanceof Error ? err.message : "Could not update like.");
+    } finally {
+      setLoading(false);
     }
-
-    setIsLiked(nextLiked);
-    setLikes((count) => count + (nextLiked ? 1 : -1));
-    updatedOptimistically = true;
-
-    const { data: newLikeCount } = await putLike(resourceId, nextLiked);
-    setLikes(newLikeCount);
-  } catch (err) {
-    console.error("Like request failed:", err);
-
-    if (updatedOptimistically) {
-      setIsLiked(!nextLiked);
-      setLikes((count) => count + (nextLiked ? -1 : 1));
-    }
-
-    setError(err instanceof Error ? err.message : "Could not update like.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 const handleDelete = async () => {
   setError("");
