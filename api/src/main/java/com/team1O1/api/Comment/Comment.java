@@ -1,5 +1,8 @@
 package com.team1O1.api.Comment;
 
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +25,7 @@ public class Comment {
     private Integer parentId;
 
     @Column(name = "comment_content", nullable = false, columnDefinition = "TEXT")
-    private Interger commentContent;
+    private String commentContent;
 
     @Column(name = "created", nullable = false)
     private LocalDateTime created;
@@ -30,16 +33,16 @@ public class Comment {
     public Comment() {}
 
     public Integer getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setId(Integer id) { this.id = id; }
 
     public Integer getResourceId() { return resourceId; }
-    public void setResourceId(Long resourceId) { this.resourceId = resourceId; }
+    public void setResourceId(Integer resourceId) { this.resourceId = resourceId; }
 
     public Integer getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public void setUserId(Integer userId) { this.userId = userId; }
 
     public Integer getParentId() { return parentId; }
-    public void setParentId(Long parentId) { this.parentId = parentId; }
+    public void setParentId(Integer parentId) { this.parentId = parentId; }
 
     public String getCommentContent() { return commentContent; }
     public void setCommentContent(String commentContent) { this.commentContent = commentContent; }
