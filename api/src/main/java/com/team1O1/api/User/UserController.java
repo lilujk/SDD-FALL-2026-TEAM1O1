@@ -2,6 +2,7 @@ package com.team1O1.api.User;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,12 +19,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @RequestMapping ("/user")
 public class UserController {
 
+    @Autowired
+    private UserRepository userRepository;
+
     private static final LocalDateTime NOW = LocalDateTime.of(2025, 11, 13, 0, 0);
 
     /** User. image is always null for now. created: seconds since the Unix epoch. Passwords are never returned. */
     public record UserView(
-        @JsonProperty("Id") Integer id, 
-        @JsonProperty("Username") String username, 
+        @JsonProperty("Id") Long id, 
+        @JsonProperty("username") String username, 
         @JsonProperty("email") String email,
         @JsonProperty("password") String password,
         @JsonProperty("bio") String bio, 
@@ -39,10 +43,11 @@ public class UserController {
 
     //add thing in mapping to indicate it generates json
     @GetMapping(path = "/{id}")
-    public ResponseEntity<String> getUser(@PathVariable int id){
+    public ResponseEntity<UserView> getUser(@PathVariable Long id){
         // TODO: implement
          UserView temp = new UserView(id, "JohnCola", "jc@gmail.com","pass", "epic bio", NOW);
-         return ResponseEntity.status(HttpStatus.CREATED).body("{\"Id\": 12345678, \"username\": \"JohnCola\",\"email\":\"someEmail@email.com\",\"password\":\"password\",\"bio\":\"awesome\",\"created\":\"someTime\"}");
+         return ResponseEntity.status(HttpStatus.CREATED).body(temp);
+        //  return ResponseEntity.status(HttpStatus.CREATED).body("{\"Id\": 12345678, \"username\": \"JohnCola\",\"email\":\"someEmail@email.com\",\"password\":\"password\",\"bio\":\"awesome\",\"created\":\"someTime\"}");
     }
 
     // @PatchMapping(path = "/{id}", consumes = "application/json")
