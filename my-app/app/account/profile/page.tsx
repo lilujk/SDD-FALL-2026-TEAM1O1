@@ -1,3 +1,12 @@
+import AccountNavBar from "@/components/AccountNavBar";
+
 export default function Account() {
-  return <h1>Account</h1>;
+  return (
+  
+    <div className="flex flex-row">
+      <AccountNavBar />
+      
+    </div>
+  
+  );
 }
