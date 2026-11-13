@@ -36,7 +36,7 @@ export default function IndividualResource() {
   const [description, setDescription] = useState("");
   const [author, setAuthor] = useState("");
   const [link, setLink] = useState("");
-  const [thumnail, setThumbnail] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
   const [tags, setTags] = useState<ResourceTagData[]>([]);
   const [warnings, setWarnings] = useState<ResourceTagData[]>([]);
   const [medium, setMedium] = useState<ResourceTagData[]>([]);
@@ -88,7 +88,7 @@ export default function IndividualResource() {
         setDescription(resource.description);
         setAuthor(user.username);
         setLink(resource.link);
-        setThumbnail(resource.thumnail);
+        setThumbnail(resource.thumbnail);
         setTags(resource.tags ?? []);
         setWarnings(resource.warnings ?? []);
         setMedium(resource.medium ?? []);
