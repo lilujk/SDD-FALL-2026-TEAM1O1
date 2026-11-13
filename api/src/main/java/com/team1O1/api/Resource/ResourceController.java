@@ -1,5 +1,7 @@
 package com.team1O1.api.Resource;
 
+import com.team1O1.api.Tag.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +26,7 @@ public class ResourceController {
 
     @Autowired
     private ResourceRepository resourceRepository;
+    private TagRepository tagRepository;
 
     private static final LocalDateTime NOW = LocalDateTime.of(2025, 11, 13, 0, 0);
 
@@ -38,12 +41,17 @@ public class ResourceController {
             LocalDateTime created) {
     }
 
+    // array of ids
+    @GetMapping(path = "/ids")
+    public List<Long> getAllResourceIds() {
+        return resourceRepository.findAll().stream()
+                .map(Resource::getId)
+                .toList();
+    }
+
+    // find by id
     @GetMapping(path = "/{id}")
     public ResponseEntity<ResourceView> getResource(@PathVariable Long id) {
-        // return "{\"Id\": 12345678,\"title\": \"Google
-        // Fonts\",\"userId\":\"1\",\"description\":\"lovely
-        // fonts\",\"link\":\"google_example.com\",\"approved\":\"true\",
-        // \"free\":\"0\", \"created\":\"someTime\"}";
         Optional<Resource> r = resourceRepository.findById(id);
         if (r.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -82,15 +90,21 @@ public class ResourceController {
     // return "TODO: put resource like";
     // }
 
-    // findById ->
+    // findByuserId ->
     @GetMapping("/user/{userId}")
-    public String findResourceByUser() {
-        return "TODO";
+    public List<Long> findResourceByUser(@PathVariable("userId") Long userId) {
+        return resourceRepository.findByUserId(userId).stream()
+                .map(Resource::getId)
+                .toList();
     }
 
+    // GET /resource/tags/{tagName} -> [1, 4, 9] : IDs of every resource with that
+    // tag ([] if none)
     @GetMapping("/tags/{tagName}")
-    public String findResourceByTag() {
-        return "TODO";
+    public List<Long> findResourceByTag(@PathVariable("tagName") String tagName) {
+        return resourceRepository.findIdsWithTags(List.of(tagName)).stream()
+                .map(Number::longValue)
+                .toList();
     }
 
     // Natalie - like resource
