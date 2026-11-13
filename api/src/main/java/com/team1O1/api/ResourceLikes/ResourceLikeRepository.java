@@ -12,6 +12,6 @@ public interface ResourceLikeRepository extends JpaRepository<ResourceLike, Long
     // Find all taggings with a specific resource ID
     List<ResourceLike> findByResourceId(Long resourceId);
 
-    @Query("select l from likes_resources l where l.resourceId = ?1 AND l.userId = ?2")
-    List<ResourceLike> findByResourceIdAndUserId(Long resourceId, Long userId);
+    // @Query("select l from likes_resources l where l.resourceId = ?1 AND l.userId = ?2")
+    // List<ResourceLike> findByResourceIdAndUserId(Long resourceId, Long userId);
 }
