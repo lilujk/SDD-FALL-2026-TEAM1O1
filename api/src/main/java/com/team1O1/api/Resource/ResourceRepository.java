@@ -18,4 +18,6 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
 
     List<Resource> findByUserId(long id);
 
+    @Query(value = "SELECT DISTINCT x.resource_id FROM taggings x JOIN tags t ON t.id = x.tag_id WHERE t.name IN (:names)", nativeQuery = true)
+    List<Number> findIdsWithTags(@Param("names") Collection<String> names);
 }

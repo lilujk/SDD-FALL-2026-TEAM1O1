@@ -1,5 +1,7 @@
 package com.team1O1.api.Resource;
 
+import com.team1O1.api.Tag.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +30,12 @@ public class ResourceController {
 
     @Autowired
     private ResourceRepository resourceRepository;
+    private TagRepository tagRepository;
+
+    private static ResourceView toView(Resource r) {
+        return new ResourceView(r.getId(), r.getTitle(), r.getUserId(), r.getDescription(),
+                r.getLink(), Boolean.TRUE.equals(r.getApproved()), r.getAccess(), r.getCreated());
+    }
 
     @Autowired 
     private TaggingsRepository taggingsRepository;
@@ -36,6 +44,9 @@ public class ResourceController {
     private ResourceLikeRepository likesRepository;
 
     // private static final LocalDateTime NOW = LocalDateTime.of(2025, 11, 13, 0, 0);
+
+    public record ResourcePatch(String title, String description, String link, Integer free) {
+    }
 
     public record ResourceView(
             @JsonProperty("Id") Long id,
@@ -51,12 +62,17 @@ public class ResourceController {
     public record ResourceList(
         @JsonProperty("resourceId") List<Long> resourceId){}
 
+    // array of ids
+    @GetMapping(path = "/ids")
+    public List<Long> getAllResourceIds() {
+        return resourceRepository.findAll().stream()
+                .map(Resource::getId)
+                .toList();
+    }
+
+    // find by id
     @GetMapping(path = "/{id}")
     public ResponseEntity<ResourceView> getResource(@PathVariable Long id) {
-        // return "{\"Id\": 12345678,\"title\": \"Google
-        // Fonts\",\"userId\":\"1\",\"description\":\"lovely
-        // fonts\",\"link\":\"google_example.com\",\"approved\":\"true\",
-        // \"free\":\"0\", \"created\":\"someTime\"}";
         Optional<Resource> r = resourceRepository.findById(id);
         if (r.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -74,22 +90,34 @@ public class ResourceController {
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
+    // PATCH /resource/{id} -> 200 with the updated resource, 404 if it doesn't
+    // exist
     @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<String> updateResource(@PathVariable Long id, @RequestBody Resource
-    resource) {
-            Optional<Resource> r= resourceRepository.findById(id);
-            if (r.isEmpty()){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
-            }
-            Resource real = r.get();
-            real.setAccess(resource.getAccess());
-            real.setApproved(resource.getApproved());
-            real.setDescription(resource.getDescription());
-            real.setTitle(resource.getTitle());
-            real.setLink(resource.getLink());
+    public ResponseEntity<ResourceView> updateResource(@PathVariable("id") Long id,
+            @RequestBody ResourcePatch patch) {
+        Optional<Resource> found = resourceRepository.findById(id);
+        if (found.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Resource r = found.get();
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("ok");
+        if (patch.title() != null)
+            r.setTitle(patch.title());
+        if (patch.description() != null)
+            r.setDescription(patch.description());
+        if (patch.link() != null)
+            r.setLink(patch.link());
+        if (patch.free() != null)
+            r.setAccess(patch.free());
+
+        Resource saved = resourceRepository.save(r);
+        return ResponseEntity.ok(toView(saved));
     }
+    // @PatchMapping(path = "/{id}", consumes = "application/json")
+    // public String updateResource(@PathVariable long id, @RequestBody Resource
+    // resource) {
+    // return "TODO: update resource";
+    // }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<String> deleteResource(@PathVariable Long id) {
@@ -106,10 +134,12 @@ public class ResourceController {
     // return "TODO: put resource like";
     // }
 
-    // findById ->
+    // findByuserId ->
     @GetMapping("/user/{userId}")
-    public String findResourceByUser() {
-        return "TODO";
+    public List<Long> findResourceByUser(@PathVariable("userId") Long userId) {
+        return resourceRepository.findByUserId(userId).stream()
+                .map(Resource::getId)
+                .toList();
     }
     
     @GetMapping("/price/{price}")
@@ -117,13 +147,15 @@ public class ResourceController {
          return ResponseEntity.status(HttpStatus.OK).body("");
     }
 
-
-    //tagging
+    // GET /resource/tags/{tagName} -> [1, 4, 9] : IDs of every resource with that
+    // tag ([] if none)
     @GetMapping("/tags/{tagName}")
-    public ResponseEntity<String> findResourceByTag() {
-
-        return ResponseEntity.status(HttpStatus.OK).body("Resource deleted");
+    public List<Long> findResourceByTag(@PathVariable("tagName") String tagName) {
+        return resourceRepository.findIdsWithTags(List.of(tagName)).stream()
+                .map(Number::longValue)
+                .toList();
     }
+
 
     @PostMapping("{id}/like")
     public ResponseEntity<String> likeResource (@PathVariable Long id, ResourceLike like){
