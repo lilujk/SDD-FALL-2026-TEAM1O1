@@ -50,9 +50,7 @@ export default function Login() {
 
     try {
       await postLogin(username, password);
-      const session = await getSession();
-
-      console.log(session);
+      router.replace("/account/profile");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {

@@ -10,4 +10,7 @@ const api = axios.create({
 export const postLogin = (username, password) => api.post("/login", { "username": username, "password": password});
 export const postLogout = () => api.post("/logout");
 export const getSession = () => api.get("/session");
+
+export const getUser = (userID) => api.get(`/user/${userID}`);
+
 export default api;
