@@ -10,7 +10,7 @@ import Comment from "@/components/Comment";
 import WriteCommentModal from "@/components/WriteCommentModal";
 
 import { useParams, useRouter } from "next/navigation";
-import { getResource, getUser, getSession, putLike } from "../../lib/api.js";
+import { getResource, getUser, getSession, putLike, deleteResource } from "../../lib/api.js";
 
 type ResourceTagData = Pick<ResourceTagProps, "name" | "type">;
 
@@ -146,11 +146,41 @@ export default function IndividualResource() {
   }
 };
 
+const handleDelete = async () => {
+  setError("");
+  setLoading(true);
+
+  try {
+    const { session } = await checkSession();
+
+    if (!session) {
+      router.push("/account-management/login");
+      return;
+    }
+
+    await deleteResource(resourceId);
+    router.replace("/explore");
+  } catch (err) {
+    setError(err instanceof Error ? err.message : "Could not delete resource.");
+  } finally {
+    setLoading(false);
+  }
+};
+
   return <div className="mx-auto max-w-5xl px-4 py-6">
   
   <div className="flex flex-row justify-between">
     <Link href="/explore" className="text-black py-2 px-5 border-1 border-solid rounded-sm">← Back to search</Link>
-    <img src="/trash.png" alt="delete" className="h-8 w-8 object-contain cursor-pointer"/>
+    {error && <p className="text-red-600">{error}</p>}
+    <button
+      type="button"
+      onClick={handleDelete}
+      disabled={loading}
+      aria-label="Delete resource"
+      className="h-8 w-8 cursor-pointer disabled:opacity-50"
+    >
+      <img src="/trash.png" alt="" className="h-full w-full object-contain" />
+    </button>
   </div>
 
   <div className="mt-6 h-64 rounded-xl overflow-hidden bg-neutral-900">

@@ -79,7 +79,7 @@ export default function Explore({}) {
             title={title}
             description={description}
             tags={tags}
-            link={`/individual-resource/${12345678}`}
+            link={`/individual-resource/${1}`}
           />
         </div>
       </div>
