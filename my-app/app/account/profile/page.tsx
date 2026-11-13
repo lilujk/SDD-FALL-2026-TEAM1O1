@@ -85,9 +85,17 @@ export default function Account() {
     <div className="flex flex-row">
       <AccountNavBar />
       <div className="ml-3">
-        <div className="mb-5">
-          <h1 className="text-2xl font-semibold">{username}</h1>
-          <p className="text-gray-600 mt-1">{bio || "No bio yet."}</p>
+        <div className="ml-5 mb-5 border-1 border-black border-solid w-225 h-75">
+          <div className="mx-20 my-8">
+            <div className="flex flex-row items-center gap-3 border-b-solid border-b-black border-b-2 pb-3 px-6">
+              <img className="rounded-5 h-30 w-30 rounded-full object-cover" src="/zentpfp.jpg"></img>
+              <h1 className="text-4xl font-semibold text-black">@{username}</h1>
+            </div>
+            <div className="flex flex-col ml-5 mb-10 mt-2">
+              <h2 className="text-2xl font-normal text-black underline mt-3 ml-5">Bio</h2>
+              <p className="text-gray-600 mt-1 ml-5">{bio || "No bio yet."}</p>
+            </div>
+          </div>
         </div>
 
         {error && <p className="text-red-600 mb-3">{error}</p>}

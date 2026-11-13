@@ -13,4 +13,7 @@ export const getSession = () => api.get("/session");
 
 export const getUser = (userID) => api.get(`/user/${userID}`);
 
+export const getResource = (resourceID) => api.get(`/resource/${resourceID}`);
+export const putLike = (resourceID, liked) => api.put(`/resource/${resourceID}/like`, liked);
+
 export default api;
