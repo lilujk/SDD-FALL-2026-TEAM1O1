@@ -205,18 +205,21 @@ public class ResourceController {
         if (!resourceLikeRepository.existsByResourceIdAndUserId(id, body.userId())) { // no double-likes
             resourceLikeRepository.save(new ResourceLike(id, body.userId()));
         }
+        else{
+            resourceLikeRepository.deleteByResourceIdAndUserId(id, body.userId());
+        }
         return ResponseEntity.ok(resourceLikeRepository.countByResourceId(id));
     }
 
     // DELETE /resource/{id}/like?userId=1 -> 200 with the new like count
-    @DeleteMapping("/{id}/like")
-    public ResponseEntity<Long> unlikeResource(@PathVariable("id") Long id, @RequestParam("userId") Long userId) {
-        if (!resourceRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        resourceLikeRepository.deleteByResourceIdAndUserId(id, userId);
-        return ResponseEntity.ok(resourceLikeRepository.countByResourceId(id));
-    }
+    // @DeleteMapping("/{id}/like")
+    // public ResponseEntity<Long> unlikeResource(@PathVariable("id") Long id, @RequestParam("userId") Long userId) {
+    //     if (!resourceRepository.existsById(id)) {
+    //         return ResponseEntity.notFound().build();
+    //     }
+    //     resourceLikeRepository.deleteByResourceIdAndUserId(id, userId);
+    //     return ResponseEntity.ok(resourceLikeRepository.countByResourceId(id));
+    // }
 
     @PostMapping("/{id}/save")
     public ResponseEntity<String> saveResource(@PathVariable("id") Long id, @RequestBody SavedResource resource ){
