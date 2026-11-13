@@ -6,6 +6,7 @@ import { postLogout, getSession, getResource, getUserResources } from "../../lib
 import AccountNavBar from "@/components/AccountNavBar";
 import ResourceListing from "@/components/ResourceListing";
 import ResourceTag, { type ResourceTagProps } from "@/components/ResourceTag";
+import Link from 'next/link';
 
 type Resource = {
   id: number | string;
@@ -99,7 +100,7 @@ export default function YourResources() {
       <AccountNavBar />
       <div className="ml-3">
          <h1 className="text-black text-3xl ml-5 mb-2">Your Shared Resources</h1>
-        <div className="ml-5 mb-5 border-1 border-black border-solid w-225 h-75">
+        <div className="ml-5 mb-5 border border-black w-225 min-h-[18.75rem] p-2 flex flex-col gap-2">
             {resources.map((resource) => {
             const tags = [
                ...(resource.tags ?? []),
@@ -111,13 +112,24 @@ export default function YourResources() {
             ];
 
             return (
-               <ResourceListing
-                  key={resource.id}
+            <div key={resource.id} className="flex items-center gap-3">
+               <div className="min-w-0 flex-1">
+                  <ResourceListing
                   title={resource.title}
                   description={resource.description}
                   tags={tags}
                   link={`/individual-resource/${resource.id}`}
-               />
+                  />
+               </div>
+
+               <Link
+                  href={`/account/your-resources/edit-resource/${resource.id}`}
+                  aria-label={`Edit ${resource.title}`}
+                  className="flex h-10 w-10 mr-5 shrink-0 items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100"
+               >
+                  <img src="/pencil.png" alt="" className="h-5 w-5 object-contain" />
+               </Link>
+            </div>
             );
             })}
         </div>
