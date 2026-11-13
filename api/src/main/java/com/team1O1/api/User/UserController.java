@@ -5,6 +5,17 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping ("/user")
 public class UserController {
+
+    /** User. image is always null for now. created: seconds since the Unix epoch. Passwords are never returned. */
+    public record UserView(
+        @JsonProperty("ID") Integer id, 
+        String username, 
+        String email,
+        String password,
+        String bio, 
+        DateTime created) {}
+
+
     @PostMapping(path = "", consumes = "application/json")
     public void postUser(@PathVariable int id, @RequestBody User user){
 
