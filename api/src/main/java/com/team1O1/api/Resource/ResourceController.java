@@ -1,6 +1,7 @@
 package com.team1O1.api.Resource;
 
 import com.team1O1.api.Tag.*;
+import com.team1O1.api.History.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +33,8 @@ public class ResourceController {
     @Autowired
     private ResourceRepository resourceRepository;
     private TagRepository tagRepository;
+    @Autowired
+    private HistoryRepository historyRepository;
 
     private static ResourceView toView(Resource r) {
         return new ResourceView(r.getId(), r.getTitle(), r.getUserId(), r.getDescription(),
@@ -161,6 +164,30 @@ public class ResourceController {
         return resourceRepository.findIdsWithTags(List.of(tagName)).stream()
                 .map(Number::longValue)
                 .toList();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResourceView> getResource(@PathVariable("id") Long id,
+            @RequestParam(name = "userId", required = false) Long userId) {
+        Optional<Resource> found = resourceRepository.findById(id);
+        if (found.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        if (userId != null) {
+            recordView(userId, id);
+        }
+        return ResponseEntity.ok(toView(found.get()));
+    }
+
+    /**
+     * Adds the resource to the user's history, or moves it to the top if it's
+     * already there.
+     */
+    private void recordView(Long userId, Long resourceId) {
+        History h = historyRepository.findByUserIdAndResourceId(userId, resourceId)
+                .orElseGet(() -> new History(userId, resourceId));
+        h.setViewed(LocalDateTime.now());
+        historyRepository.save(h);
     }
 
     // POST /resource/{id}/like body: { "userId": 1 } -> 200 with the new like

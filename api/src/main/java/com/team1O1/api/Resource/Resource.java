@@ -49,7 +49,7 @@ public class Resource {
     public Resource() {
     }
 
-    public Resource(String title, Long userId, String description, String link, Boolean approved, Integer access){
+    public Resource(String title, Long userId, String description, String link, Boolean approved, Integer access) {
         this.title = title;
         this.userId = userId;
         this.description = description;
