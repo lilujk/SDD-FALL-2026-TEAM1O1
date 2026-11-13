@@ -1,6 +1,5 @@
 "use client";
 
-import FormRowTextInput from "@/components/FormRowTextInput";
 import FormCheckboxInput from "./FormCheckbox";
 
 const checkboxGroups = [
@@ -27,9 +26,21 @@ export default function SearchPane() {
       </h1>
 
       <div>
-        <FormRowTextInput name="Resource Title"/>
-        <FormRowTextInput name="Resource Author"/>
-        <FormRowTextInput name="Include Tag(s)"/>
+
+        <div className="flex flex-col m-2">
+          <p>Resource Title</p>
+          <input name="Resource Title" className="border-1 border-black-300 rounded-md px-1 py-0.5"></input>
+        </div>
+
+        <div className="flex flex-col m-2">
+          <p>Resource Author</p>
+          <input name="Resource Author" className="border-1 border-black-300 rounded-md px-1 py-0.5"></input>
+        </div>
+
+        <div className="flex flex-col m-2">
+          <p>Include Tag(s)</p>
+          <input name="Include Tag(s)" className="border-1 border-black-300 rounded-md px-1 py-0.5"></input>
+        </div>
 
         {checkboxGroups.map(({ label, options }) => (
           <div key={label} className="px-2 py-1 mx-1">
