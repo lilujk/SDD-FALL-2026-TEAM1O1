@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -37,13 +38,14 @@ public class ResourceController {
                 r.getLink(), Boolean.TRUE.equals(r.getApproved()), r.getAccess(), r.getCreated());
     }
 
-    @Autowired 
+    @Autowired
     private TaggingsRepository taggingsRepository;
 
-    @Autowired 
-    private ResourceLikeRepository likesRepository;
+    @Autowired
+    private ResourceLikeRepository resourceLikeRepository;
 
-    // private static final LocalDateTime NOW = LocalDateTime.of(2025, 11, 13, 0, 0);
+    // private static final LocalDateTime NOW = LocalDateTime.of(2025, 11, 13, 0,
+    // 0);
 
     public record ResourcePatch(String title, String description, String link, Integer free) {
     }
@@ -60,7 +62,12 @@ public class ResourceController {
     }
 
     public record ResourceList(
-        @JsonProperty("resourceId") List<Long> resourceId){}
+            @JsonProperty("resourceId") List<Long> resourceId) {
+    }
+
+    /** Body of POST /resource/{id}/like. Temporary until login is wired up. */
+    public record LikeRequest(Long userId) {
+    }
 
     // array of ids
     @GetMapping(path = "/ids")
@@ -141,10 +148,10 @@ public class ResourceController {
                 .map(Resource::getId)
                 .toList();
     }
-    
+
     @GetMapping("/price/{price}")
-    public ResponseEntity<String> filterByPrice(int price){
-         return ResponseEntity.status(HttpStatus.OK).body("");
+    public ResponseEntity<String> filterByPrice(int price) {
+        return ResponseEntity.status(HttpStatus.OK).body("");
     }
 
     // GET /resource/tags/{tagName} -> [1, 4, 9] : IDs of every resource with that
@@ -156,13 +163,36 @@ public class ResourceController {
                 .toList();
     }
 
-
-    @PostMapping("{id}/like")
-    public ResponseEntity<String> likeResource (@PathVariable Long id, ResourceLike like){
-        // Optional<ResourceLike> isLike = ResourceLikeRepository.findByResourceIdAndUserId(id, like.getuserId());
-        return ResponseEntity.status(HttpStatus.OK).body("Resource liked");
-
+    // POST /resource/{id}/like body: { "userId": 1 } -> 200 with the new like
+    // count, 404 if no such resource
+    @PostMapping("/{id}/like")
+    public ResponseEntity<Long> likeResource(@PathVariable("id") Long id, @RequestBody LikeRequest body) {
+        if (!resourceRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        if (!resourceLikeRepository.existsByResourceIdAndUserId(id, body.userId())) { // no double-likes
+            resourceLikeRepository.save(new ResourceLike(id, body.userId()));
+        }
+        return ResponseEntity.ok(resourceLikeRepository.countByResourceId(id));
     }
+
+    // DELETE /resource/{id}/like?userId=1 -> 200 with the new like count
+    @DeleteMapping("/{id}/like")
+    public ResponseEntity<Long> unlikeResource(@PathVariable("id") Long id, @RequestParam("userId") Long userId) {
+        if (!resourceRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        resourceLikeRepository.deleteByResourceIdAndUserId(id, userId);
+        return ResponseEntity.ok(resourceLikeRepository.countByResourceId(id));
+    }
+    // @PostMapping("{id}/like")
+    // public ResponseEntity<String> likeResource(@PathVariable Long id,
+    // ResourceLike like) {
+    // // Optional<ResourceLike> isLike =
+    // // ResourceLikeRepository.findByResourceIdAndUserId(id, like.getuserId());
+    // return ResponseEntity.status(HttpStatus.OK).body("Resource liked");
+
+    // }
     // Natalie - like resource
 
 }
