@@ -22,8 +22,8 @@ export default function About() {
 
       <div className="flex flex-row items-center justify-center p-20">
         <div className="w-1/2 items-center justify-center">
-          <h1 className="text-6xl">What is ART 1O1?</h1>
-          <p className="pt-5 text-2xl">The 1O1 Project proposes a web app that functions as a resource-curation platform and organization tool for artists. Artists often have to sort through large amounts of content to find helpful material, while their saved resources remain scattered across different platforms. On this platform, users will be able to share resources that they have personally used and found helpful, as well as view recommended resources from other artists. Users will also be able to easily search through categories and tags to find high-quality resources suited to their proficiency and needs. Additionally, users can save their favorite resources to their accounts, keeping useful materials from different platforms all organized in one central location. User feedback on posts through likes and comments will also help highly-rated art resources stand out and support as many artists as possible.</p>
+          <h1 className="text-6xl text-black">What is ART 1O1?</h1>
+          <p className="pt-5 text-2xl text-black">The 1O1 Project proposes a web app that functions as a resource-curation platform and organization tool for artists. Artists often have to sort through large amounts of content to find helpful material, while their saved resources remain scattered across different platforms. On this platform, users will be able to share resources that they have personally used and found helpful, as well as view recommended resources from other artists. Users will also be able to easily search through categories and tags to find high-quality resources suited to their proficiency and needs. Additionally, users can save their favorite resources to their accounts, keeping useful materials from different platforms all organized in one central location. User feedback on posts through likes and comments will also help highly-rated art resources stand out and support as many artists as possible.</p>
         </div>
         <div className="w-1/2 flex items-center justify-center">
           <Image 
@@ -42,8 +42,8 @@ export default function About() {
           />
         </div>
         <div className="w-1/2 items-center justify-center">
-          <h1 className="text-6xl">Our Mission</h1>
-          <p className="pt-5 text-2xl">We want to connect artists with each other so we can all develop our skills. As artists we learn better together! Join our community of artists from all levels of experience in a single goal. To improve!</p>
+          <h1 className="text-6xl text-black">Our Mission</h1>
+          <p className="pt-5 text-2xl text-black">We want to connect artists with each other so we can all develop our skills. As artists we learn better together! Join our community of artists from all levels of experience in a single goal. To improve!</p>
         </div>
       </div>
     </div>
