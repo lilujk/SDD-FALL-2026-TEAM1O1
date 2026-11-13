@@ -13,4 +13,13 @@ export const getSession = () => api.get("/session");
 
 export const getUser = (userID) => api.get(`/user/${userID}`);
 
+export const getUserResources = (userID) => api.get(`/resource/user/${userID}`);
+
+export const getResource = (resourceID) => api.get(`/resource/${resourceID}`);
+export const postResource = (userId, resource) => api.post(`/resource`, resource);
+export const patchResource = (resourceID, changes) => api.patch(`/resource/${resourceID}`, changes);
+export const deleteResource = (resourceID) => api.delete(`/resource/${resourceID}`);
+
+export const putLike = (resourceID, liked) => api.put(`/resource/${resourceID}/like`, liked);
+
 export default api;

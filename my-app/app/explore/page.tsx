@@ -68,22 +68,20 @@ export default function Explore({}) {
       </div>
     </div>
 
-    <div className="flex flex-row gap-5">
-      <div className="flex flex-row items-start ml-5 mt-2">
-        <SearchPane></SearchPane>
+    <div className="flex w-full flex-row items-start gap-5">
+      <div className="ml-5 mt-2 shrink-0">
+        <SearchPane />
       </div>
 
-      <div className="flex flex-col gap-2 mb-10">
-        <ResourceListing title={title} description={description} tags={tags} link={"/individual-resource"}></ResourceListing>
-        <ResourceListing title={title2} description={description2} tags={tags2} link={"/individual-resource"}></ResourceListing>
-        <ResourceListing title={title3} description={description3} tags={tags3} link={"/individual-resource"}></ResourceListing>
-        <ResourceListing title={title4} description={description4} tags={tags4} link={"/individual-resource"}></ResourceListing>
-        <ResourceListing title={title} description={description} tags={tags} link={"/individual-resource"}></ResourceListing>
-        <ResourceListing title={title} description={description} tags={tags} link={"/individual-resource"}></ResourceListing>
-        <ResourceListing title={title} description={description} tags={tags} link={"/individual-resource"}></ResourceListing>
-        <ResourceListing title={title} description={description} tags={tags} link={"/individual-resource"}></ResourceListing>
-        <ResourceListing title={title} description={description} tags={tags} link={"/individual-resource"}></ResourceListing>
-        <ResourceListing title={title} description={description} tags={tags} link={"/individual-resource"}></ResourceListing>
+      <div className="mb-10 flex min-w-0 flex-1 flex-col gap-2">
+        <div className="mb-10 flex min-w-0 flex-1 flex-col gap-2">
+          <ResourceListing
+            title={title}
+            description={description}
+            tags={tags}
+            link={`/individual-resource/${1}`}
+          />
+        </div>
       </div>
     </div>
 
