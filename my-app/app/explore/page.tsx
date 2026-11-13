@@ -7,6 +7,7 @@ import Link from 'next/link';
 
 import {getTagResources, getAuthorResources, getResource}  from "../lib/api.js";
 import FormCheckboxInput from "@/components/FormCheckbox.js";
+import { PassThrough } from "stream";
 
 type Resource = {
   id: number | string;
@@ -21,6 +22,12 @@ type Resource = {
 
 
 type Id = number | string;
+
+function isNotFound(err: any) {
+  return err?.response?.status === 404 || err?.status === 404;
+}
+
+
 
 export default function Explore({}) {
   const [tagName, setTagName] = useState("");
@@ -45,15 +52,28 @@ export default function Explore({}) {
     try {
       const ids: Id[] = [];
 
-      if (tag) {
-        const {data } = await getTagResources(tag);
-        ids.push(...(data.resourceIds ?? []));
+      try {
+        if (tag) {
+          const {data } = await getTagResources(tag);
+          ids.push(...(data.resourceIds ?? []));
+        }
+      } catch (e1) {
+        if (!isNotFound(e1)) {
+          throw e1
+        }
       }
 
-      if (authorQ) {
+      try {
+        if (authorQ) {
         const { data } = await getAuthorResources(authorQ);
         ids.push(...(data.resourceIds ?? []));
+        }
+      } catch (e2) {
+        if (!isNotFound(e2)) {
+          throw e2
+        }
       }
+      
 
       const uniqueIds = Array.from(new Set(ids.map(String)));
 
