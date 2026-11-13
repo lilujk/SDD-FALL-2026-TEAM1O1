@@ -18,18 +18,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @RequestMapping("/resource")
 public class ResourceController {
 
+    @Autowired
+    private ResourceRepository resourceRepository;
+
+    private static final LocalDateTime NOW = LocalDateTime.of(2025, 11, 13, 0, 0);
+
     @GetMapping(path = "/{id}")
     public String getResource(@PathVariable long id) {
         return "{\"Id\": 12345678,\"title\": \"Google Fonts\",\"userId\":\"1\",\"description\":\"lovely fonts\",\"link\":\"google_example.com\",\"approved\":\"true\", \"free\":\"0\", \"created\":\"someTime\"}";
 
     }
 
-    // @PostMapping(path = "/{id}", consumes = "application/json")
-    // public String postResource(@PathVariable long id, @RequestBody Resource
-    // resource) {
-    // return "TODO: post resource";
+    @PostMapping(path = "/{id}", consumes = "application/json")
+    public String postResource(@PathVariable long id, @RequestBody Resource resource) {
+        return "TODO: post resource";
 
-    // }
+    }
 
     // @PatchMapping(path = "/{id}", consumes = "application/json")
     // public String updateResource(@PathVariable long id, @RequestBody Resource

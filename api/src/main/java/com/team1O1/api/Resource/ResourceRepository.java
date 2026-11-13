@@ -14,5 +14,8 @@ import org.springframework.data.repository.query.Param;
  * and clean-up of comments and saves when a resource is deleted.
  */
 public interface ResourceRepository extends JpaRepository<Resource, Long> {
+    Resource findById(long id);
+
+    List<Resource> findByUserId(long id);
 
 }
