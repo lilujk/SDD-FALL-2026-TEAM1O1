@@ -23,6 +23,15 @@ public class ResourceController {
 
     private static final LocalDateTime NOW = LocalDateTime.of(2025, 11, 13, 0, 0);
 
+    public record ResourceView(
+            @JsonProperty("Id") Long id,
+            @JsonProperty("title") String title,
+            @JsonProperty("userId") String email,
+            @JsonProperty("description") String password,
+            @JsonProperty("bio") String bio,
+            LocalDateTime created) {
+    }
+
     @GetMapping(path = "/{id}")
     public String getResource(@PathVariable long id) {
         return "{\"Id\": 12345678,\"title\": \"Google Fonts\",\"userId\":\"1\",\"description\":\"lovely fonts\",\"link\":\"google_example.com\",\"approved\":\"true\", \"free\":\"0\", \"created\":\"someTime\"}";
@@ -51,9 +60,17 @@ public class ResourceController {
     // return "TODO: put resource like";
     // }
 
-    // @GetMapping(path = "/testing/{id}")
-    // public String testing(@PathVariable long id) {
-    // return "testing id:" + id;
-    // }
+    // findById ->
+    @GetMapping("/user/{userId}")
+    public String findResourceByUser() {
+        return "TODO";
+    }
+
+    @GetMapping("/tags/{tagName}")
+    public String findResourceByTag() {
+        return "TODO";
+    }
+
+    // Natalie - like resource
 
 }
