@@ -1,6 +1,7 @@
 package com.team1O1.api.User;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,18 +36,23 @@ public class UserController {
 
 
     @PostMapping(path = "", consumes = "application/json")
-    public ResponseEntity<UserView> postUser(@PathVariable int id, @RequestBody User user){
+    public ResponseEntity<String> postUser(@PathVariable int id, @RequestBody User user){
         // TODO: implement
-        UserView created = new UserView(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), user.getBio(), NOW);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        userRepository.save(user);
+        // UserView created = new UserView(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), user.getBio(), NOW);
+        return ResponseEntity.status(HttpStatus.CREATED).body("");
     }
 
     //add thing in mapping to indicate it generates json
     @GetMapping(path = "/{id}")
     public ResponseEntity<UserView> getUser(@PathVariable Long id){
         // TODO: implement
-         UserView temp = new UserView(id, "JohnCola", "jc@gmail.com","pass", "epic bio", NOW);
-         return ResponseEntity.status(HttpStatus.CREATED).body(temp);
+        Optional<User> u = userRepository.findById(id);
+        if (u.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new UserView(-1l,"","","","", LocalDateTime.now()));
+        }
+         UserView user = new UserView(u.get().getId(), u.get().getUsername(), u.get().getEmail(),u.get().getPassword(), u.get().getBio(), LocalDateTime.now());
+         return ResponseEntity.status(HttpStatus.CREATED).body(user);
         //  return ResponseEntity.status(HttpStatus.CREATED).body("{\"Id\": 12345678, \"username\": \"JohnCola\",\"email\":\"someEmail@email.com\",\"password\":\"password\",\"bio\":\"awesome\",\"created\":\"someTime\"}");
     }
 

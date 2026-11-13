@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TaggingsRepository extends JpaRepository<Tagging, Integer>  {
+public interface TaggingsRepository extends JpaRepository<Tagging, Long>  {
       // Find a taggin by tag Id
     List<Tagging> findByTagId(Long tagId);
     // Find all taggings with a specific resource ID
-    List<Tagging> findByResourceid(Long resourceId);
+    List<Tagging> findByResourceId(Long resourceId);
 }

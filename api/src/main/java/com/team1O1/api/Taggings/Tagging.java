@@ -9,15 +9,15 @@ import jakarta.persistence.*;
 public class Tagging {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long taggingId;
+
     @Column(name = "tag_id", nullable = false, updatable = false)
     private Long tagId;
 
     @Column(name = "resource_id", nullable = false, updatable = false)
     private Long resourceId;
 
-    @Column(name = "parent", nullable = false)
-    private Integer parent;
 
     // Constructors
     public Tagging() {
