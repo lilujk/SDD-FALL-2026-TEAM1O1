@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.team1O1.api.ResourceLikes.ResourceLike;
+import com.team1O1.api.ResourceLikes.ResourceLikeRepository;
+import com.team1O1.api.Taggings.TaggingsRepository;
 import com.team1O1.api.User.UserController.UserView;
 
 @RestController
@@ -25,7 +29,13 @@ public class ResourceController {
     @Autowired
     private ResourceRepository resourceRepository;
 
-    private static final LocalDateTime NOW = LocalDateTime.of(2025, 11, 13, 0, 0);
+    @Autowired 
+    private TaggingsRepository taggingsRepository;
+
+    @Autowired 
+    private ResourceLikeRepository likesRepository;
+
+    // private static final LocalDateTime NOW = LocalDateTime.of(2025, 11, 13, 0, 0);
 
     public record ResourceView(
             @JsonProperty("Id") Long id,
@@ -37,6 +47,9 @@ public class ResourceController {
             @JsonProperty("free") Integer free,
             LocalDateTime created) {
     }
+
+    public record ResourceList(
+        @JsonProperty("resourceId") List<Long> resourceId){}
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<ResourceView> getResource(@PathVariable Long id) {
@@ -55,17 +68,28 @@ public class ResourceController {
     }
 
     @PostMapping(path = "", consumes = "application/json")
-    public ResponseEntity<String> postResource(@PathVariable long id, @RequestBody Resource resource) {
+    public ResponseEntity<String> postResource(@RequestBody Resource resource) {
         // return "TODO: post resource";
         resourceRepository.save(resource);
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
-    // @PatchMapping(path = "/{id}", consumes = "application/json")
-    // public String updateResource(@PathVariable long id, @RequestBody Resource
-    // resource) {
-    // return "TODO: update resource";
-    // }
+    @PatchMapping(path = "/{id}", consumes = "application/json")
+    public ResponseEntity<String> updateResource(@PathVariable Long id, @RequestBody Resource
+    resource) {
+            Optional<Resource> r= resourceRepository.findById(id);
+            if (r.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
+            }
+            Resource real = r.get();
+            real.setAccess(resource.getAccess());
+            real.setApproved(resource.getApproved());
+            real.setDescription(resource.getDescription());
+            real.setTitle(resource.getTitle());
+            real.setLink(resource.getLink());
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("ok");
+    }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<String> deleteResource(@PathVariable Long id) {
@@ -87,12 +111,26 @@ public class ResourceController {
     public String findResourceByUser() {
         return "TODO";
     }
-
-    @GetMapping("/tags/{tagName}")
-    public String findResourceByTag() {
-        return "TODO";
+    
+    @GetMapping("/price/{price}")
+    public ResponseEntity<String> filterByPrice(int price){
+         return ResponseEntity.status(HttpStatus.OK).body("");
     }
 
+
+    //tagging
+    @GetMapping("/tags/{tagName}")
+    public ResponseEntity<String> findResourceByTag() {
+
+        return ResponseEntity.status(HttpStatus.OK).body("Resource deleted");
+    }
+
+    @PostMapping("{id}/like")
+    public ResponseEntity<String> likeResource (@PathVariable Long id, ResourceLike like){
+        // Optional<ResourceLike> isLike = ResourceLikeRepository.findByResourceIdAndUserId(id, like.getuserId());
+        return ResponseEntity.status(HttpStatus.OK).body("Resource liked");
+
+    }
     // Natalie - like resource
 
 }
