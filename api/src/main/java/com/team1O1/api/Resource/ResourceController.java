@@ -3,9 +3,6 @@ package com.team1O1.api.Resource;
 import com.team1O1.api.Tag.*;
 import com.team1O1.api.History.*;
 
-// import com.team1O1.api.Tag.Tag;
-// import com.team1O1.api.Tag.TagRepository;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -29,23 +26,16 @@ import com.team1O1.api.ResourceLikes.ResourceLikeRepository;
 import com.team1O1.api.SavedResource.SavedResource;
 import com.team1O1.api.SavedResource.SavedResourcedRepository;
 import com.team1O1.api.Taggings.TaggingsRepository;
-<<<<<<< Updated upstream
 import com.team1O1.api.User.User;
 import com.team1O1.api.User.UserRepository;
 import com.team1O1.api.User.UserController.UserView;
-=======
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
->>>>>>> Stashed changes
 
-@CrossOrigin(origins = "http://localhost:3000") // lets the Next.js front end call this
 @RestController
 @RequestMapping("/resource")
 public class ResourceController {
 
     @Autowired
     private ResourceRepository resourceRepository;
-    @Autowired
     private TagRepository tagRepository;
     private UserRepository userRepository;
     @Autowired
@@ -53,18 +43,7 @@ public class ResourceController {
 
     private ResourceView toView(Resource r) {
         return new ResourceView(r.getId(), r.getTitle(), r.getUserId(), r.getDescription(),
-                r.getLink(), r.getMedium() == null ? null : r.getMedium().getName(),
-                Boolean.TRUE.equals(r.getApproved()), r.getAccess(), r.getCreated());
-    }
-
-    /** The tag with this name, creating it if it doesn't exist yet. */
-    private Tag findOrCreateTag(String name) {
-        return tagRepository.findByName(name).orElseGet(() -> {
-            Tag t = new Tag();
-            t.setName(name);
-            t.setParent(0); // 0 = no parent
-            return tagRepository.save(t);
-        });
+                r.getLink(), Boolean.TRUE.equals(r.getApproved()), r.getAccess(), r.getCreated());
     }
 
     @Autowired
@@ -79,7 +58,7 @@ public class ResourceController {
     // private static final LocalDateTime NOW = LocalDateTime.of(2025, 11, 13, 0,
     // 0);
 
-    public record ResourcePatch(String title, String description, String link, String medium, Integer free) {
+    public record ResourcePatch(String title, String description, String link, Integer free) {
     }
 
     public record ResourceView(
@@ -88,15 +67,14 @@ public class ResourceController {
             @JsonProperty("userId") Long userId,
             @JsonProperty("description") String description,
             @JsonProperty("link") String link,
-            @JsonProperty("medium") String medium,
             @JsonProperty("approved") boolean approved,
             @JsonProperty("free") Integer free,
             LocalDateTime created) {
     }
 
-    // public record ResourceList(
-    // @JsonProperty("resourceId") List<Long> resourceId) {
-    // }
+    public record ResourceList(
+            @JsonProperty("resourceId") List<Long> resourceId) {
+    }
 
     /** Body of POST /resource/{id}/like. Temporary until login is wired up. */
     public record LikeRequest(Long userId) {
@@ -140,54 +118,16 @@ public class ResourceController {
     //     return ResponseEntity.ok(toView(found.get()));
     // }
 
-    // @PostMapping(path = "", consumes = "application/json")
-    // public ResponseEntity<String> postResource(@RequestBody Resource resource) {
-    // // return "TODO: post resource";
-    // resourceRepository.save(resource);
-    // return ResponseEntity.status(HttpStatus.CREATED).body("ok");
-    // }
-
     @PostMapping(path = "", consumes = "application/json")
-    @Transactional
-    public ResponseEntity<ResourceView> postResource(@RequestBody Resource resource) {
-        // fields the server sets, not the client
-        resource.setId(null); // database assigns the id
-        resource.setApproved(false); // new posts start unapproved
-        if (resource.getAccess() == null)
-            resource.setAccess(0);
-        resource.setCreated(LocalDateTime.now());
-
-        // medium: use the existing tag (by id or name), or create it by name
-        if (resource.getMedium() != null) {
-            Tag sent = resource.getMedium();
-
-            if (sent.getId() != null) {
-                Optional<Tag> byId = tagRepository.findById(sent.getId());
-                if (byId.isEmpty()) {
-                    return ResponseEntity.badRequest().build(); // 400: no tag with that id
-                }
-                resource.setMedium(byId.get());
-
-            } else if (sent.getName() != null && !sent.getName().isBlank()) {
-                String name = sent.getName().trim();
-                if (name.length() > 100) {
-                    return ResponseEntity.badRequest().build(); // 400: tags.name is varchar(100)
-                }
-                resource.setMedium(findOrCreateTag(name));
-
-            } else {
-                resource.setMedium(null); // empty medium object: none
-            }
-        }
-
-        Resource saved = resourceRepository.save(resource);
-        return ResponseEntity.status(HttpStatus.CREATED).body(toView(saved));
+    public ResponseEntity<String> postResource(@RequestBody Resource resource) {
+        // return "TODO: post resource";
+        resourceRepository.save(resource);
+        return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
     // PATCH /resource/{id} -> 200 with the updated resource, 404 if it doesn't
     // exist
     @PatchMapping(path = "/{id}", consumes = "application/json")
-    @Transactional
     public ResponseEntity<ResourceView> updateResource(@PathVariable("id") Long id,
             @RequestBody ResourcePatch patch) {
         Optional<Resource> found = resourceRepository.findById(id);
@@ -202,8 +142,6 @@ public class ResourceController {
             r.setDescription(patch.description());
         if (patch.link() != null)
             r.setLink(patch.link());
-        if (patch.medium() != null)
-            r.setMedium(patch.medium().isBlank() ? null : findOrCreateTag(patch.medium().trim()));
         if (patch.free() != null)
             r.setAccess(patch.free());
 
@@ -217,8 +155,7 @@ public class ResourceController {
     // }
 
     @DeleteMapping(path = "/{id}")
-    @Transactional
-    public ResponseEntity<String> deleteResource(@PathVariable("id") Long id) {
+    public ResponseEntity<String> deleteResource(@PathVariable Long id) {
         if (!resourceRepository.existsById(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
         }
@@ -285,7 +222,8 @@ public class ResourceController {
         }
         if (!resourceLikeRepository.existsByResourceIdAndUserId(id, body.userId())) { // no double-likes
             resourceLikeRepository.save(new ResourceLike(id, body.userId()));
-        } else {
+        }
+        else{
             resourceLikeRepository.deleteByResourceIdAndUserId(id, body.userId());
         }
         return ResponseEntity.ok(resourceLikeRepository.countByResourceId(id));
@@ -293,13 +231,12 @@ public class ResourceController {
 
     // DELETE /resource/{id}/like?userId=1 -> 200 with the new like count
     // @DeleteMapping("/{id}/like")
-    // public ResponseEntity<Long> unlikeResource(@PathVariable("id") Long id,
-    // @RequestParam("userId") Long userId) {
-    // if (!resourceRepository.existsById(id)) {
-    // return ResponseEntity.notFound().build();
-    // }
-    // resourceLikeRepository.deleteByResourceIdAndUserId(id, userId);
-    // return ResponseEntity.ok(resourceLikeRepository.countByResourceId(id));
+    // public ResponseEntity<Long> unlikeResource(@PathVariable("id") Long id, @RequestParam("userId") Long userId) {
+    //     if (!resourceRepository.existsById(id)) {
+    //         return ResponseEntity.notFound().build();
+    //     }
+    //     resourceLikeRepository.deleteByResourceIdAndUserId(id, userId);
+    //     return ResponseEntity.ok(resourceLikeRepository.countByResourceId(id));
     // }
 
     @PostMapping("/{id}/save")

@@ -7,15 +7,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Converter;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
-import com.team1O1.api.Tag.Tag;
 
 @Entity
 @Table(name = "resources")
@@ -37,13 +32,6 @@ public class Resource {
     @Column(name = "link", nullable = false, columnDefinition = "TEXT")
     private String link;
 
-    /**
-     * Medium tag, e.g. the "Video", "Web Article" or "Book" row in the tags table.
-     */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "medium_id")
-    private Tag medium;
-
     @Convert(converter = Resource.BinaryBooleanConverter.class)
     @Column(name = "approved", nullable = false, columnDefinition = "BINARY(1)")
     private Boolean approved = false; // binary(1), '0' / '1'
@@ -61,13 +49,11 @@ public class Resource {
     public Resource() {
     }
 
-    public Resource(String title, Long userId, String description, String link, Boolean approved, Tag medium,
-            Integer access) {
+    public Resource(String title, Long userId, String description, String link, Boolean approved, Integer access) {
         this.title = title;
         this.userId = userId;
         this.description = description;
         this.link = link;
-        this.medium = medium;
         this.approved = approved;
         this.access = access;
         this.created = LocalDateTime.now();
@@ -112,14 +98,6 @@ public class Resource {
 
     public void setLink(String link) {
         this.link = link;
-    }
-
-    public Tag getMedium() {
-        return medium;
-    }
-
-    public void setMedium(Tag medium) {
-        this.medium = medium;
     }
 
     public Boolean getApproved() {
