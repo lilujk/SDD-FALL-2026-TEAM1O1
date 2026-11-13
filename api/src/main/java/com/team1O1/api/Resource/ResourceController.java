@@ -85,17 +85,31 @@ public class ResourceController {
                 .toList();
     }
 
-    // find by id
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<ResourceView> getResource(@PathVariable Long id) {
-        Optional<Resource> r = resourceRepository.findById(id);
-        if (r.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ResourceView(-1L, "", -1L, "", "", false, 0, LocalDateTime.now()));
+    // // find by id ****OLD
+    // @GetMapping(path = "/{id}")
+    // public ResponseEntity<ResourceView> getResource(@PathVariable Long id) {
+    // Optional<Resource> r = resourceRepository.findById(id);
+    // if (r.isEmpty()) {
+    // return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    // .body(new ResourceView(-1L, "", -1L, "", "", false, 0, LocalDateTime.now()));
+    // }
+    // ResourceView rv = new ResourceView(r.get().getId(), r.get().getTitle(),
+    // r.get().getUserId(), r.get()
+    // .getDescription(), r.get().getLink(), r.get().getApproved(),
+    // r.get().getAccess(), r.get().getCreated());
+    // return ResponseEntity.status(HttpStatus.CREATED).body(rv);
+    // }
+    @GetMapping("/{id}")
+    public ResponseEntity<ResourceView> getResource(@PathVariable("id") Long id,
+            @RequestParam(name = "userId", required = false) Long userId) {
+        Optional<Resource> found = resourceRepository.findById(id);
+        if (found.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
-        ResourceView rv = new ResourceView(r.get().getId(), r.get().getTitle(), r.get().getUserId(), r.get()
-                .getDescription(), r.get().getLink(), r.get().getApproved(), r.get().getAccess(), r.get().getCreated());
-        return ResponseEntity.status(HttpStatus.CREATED).body(rv);
+        if (userId != null) {
+            recordView(userId, id);
+        }
+        return ResponseEntity.ok(toView(found.get()));
     }
 
     @PostMapping(path = "", consumes = "application/json")
@@ -171,19 +185,6 @@ public class ResourceController {
                 .toList();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ResourceView> getResource(@PathVariable("id") Long id,
-            @RequestParam(name = "userId", required = false) Long userId) {
-        Optional<Resource> found = resourceRepository.findById(id);
-        if (found.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        if (userId != null) {
-            recordView(userId, id);
-        }
-        return ResponseEntity.ok(toView(found.get()));
-    }
-
     /**
      * Adds the resource to the user's history, or moves it to the top if it's
      * already there.
@@ -222,10 +223,10 @@ public class ResourceController {
     // }
 
     @PostMapping("/{id}/save")
-    public ResponseEntity<String> saveResource(@PathVariable("id") Long id, @RequestBody SavedResource resource ){
+    public ResponseEntity<String> saveResource(@PathVariable("id") Long id, @RequestBody SavedResource resource) {
         savedRepository.save(resource);
         return ResponseEntity.ok("resource saved");
-        
+
     }
     // Natalie - like resource
 
