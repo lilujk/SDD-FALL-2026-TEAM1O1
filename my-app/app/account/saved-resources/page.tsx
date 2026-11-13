@@ -84,6 +84,10 @@ export default function Account() {
                <img src="/folder.png" className="h-8 w-8 object-contain"></img>
                <p className="text-black">Resource History</p>
             </a>
+            <a className="flex flex-row gap-5 items-center mb-5 border-1 border-black border-solid m-5 p-5" href="./resource-history">
+               <img src="/folder.png" className="h-8 w-8 object-contain"></img>
+               <p className="text-black">Uncategorized Saved Resources</p>
+            </a>
         </div>
       </div>
     </div>
