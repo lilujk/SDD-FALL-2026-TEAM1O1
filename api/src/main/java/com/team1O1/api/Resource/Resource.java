@@ -47,6 +47,17 @@ public class Resource {
     public Resource() {
     }
 
+    public Resource(String title, Long userId, String description, String link, Boolean approved, Integer access){
+        this.title = title;
+        this.userId = userId;
+        this.description = description;
+        this.link = link;
+        this.approved = approved;
+        this.access = access;
+        this.created = LocalDateTime.now();
+
+    }
+
     public Long getId() {
         return id;
     }

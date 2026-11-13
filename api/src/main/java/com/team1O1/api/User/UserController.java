@@ -36,11 +36,11 @@ public class UserController {
 
 
     @PostMapping(path = "", consumes = "application/json")
-    public ResponseEntity<String> postUser(@PathVariable int id, @RequestBody User user){
+    public ResponseEntity<String> postUser(@RequestBody User user){
         // TODO: implement
         userRepository.save(user);
         // UserView created = new UserView(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), user.getBio(), NOW);
-        return ResponseEntity.status(HttpStatus.CREATED).body("");
+        return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
     //add thing in mapping to indicate it generates json

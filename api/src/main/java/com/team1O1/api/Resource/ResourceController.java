@@ -54,12 +54,11 @@ public class ResourceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(rv);
     }
 
-    @PostMapping(path = "/{id}", consumes = "application/json")
-    public String postResource(@PathVariable long id, @RequestBody Resource resource) {
+    @PostMapping(path = "", consumes = "application/json")
+    public ResponseEntity<String> postResource(@PathVariable long id, @RequestBody Resource resource) {
         // return "TODO: post resource";
-        ResourceView created = new ResourceView(resource.getId(), resource.getTitle(), resource.getUserId(),
-                resource.getDescription(), resource.getLink(), resource.getApproved(), resource.getAccess(), NOW);
-        return "temp fix me";
+        resourceRepository.save(resource);
+        return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
     // @PatchMapping(path = "/{id}", consumes = "application/json")

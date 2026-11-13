@@ -33,6 +33,7 @@ public class User {
     private LocalDateTime created;
 
     // Constructors
+    public User(){}
     public User(String username, String email, String password, String bio) {
         this.username = username;
         this.email = email;
