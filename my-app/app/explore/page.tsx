@@ -106,9 +106,9 @@ export default function Explore({}) {
             onSubmit={handleSearch}
             className="flex min-w-75 flex-col overflow-hidden rounded-xl border border-gray-300 text-black mb-10"
           >
-            <h1 className="border-b border-gray-300 px-2 py-1 text-xl">
+            {/* <h1 className="border-b border-gray-300 px-2 py-1 text-xl">
               Advanced Search
-            </h1>
+            </h1> */}
 
             <div>
               <div className="flex flex-col m-2">
