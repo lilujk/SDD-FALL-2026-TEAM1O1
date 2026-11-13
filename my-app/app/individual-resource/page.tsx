@@ -121,7 +121,7 @@ export default function IndividualResource() {
         </div>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col mb-10">
         <h2 className="text-black font-bold">WHAT PEOPLE ARE SAYING</h2>
         <div className="my-4 flex flex-row justify-between align-items">
           <p className="underline text-black mt-1">{numReviews} reviews</p>

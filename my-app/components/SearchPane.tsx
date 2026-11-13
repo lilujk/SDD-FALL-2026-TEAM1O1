@@ -9,10 +9,6 @@ const checkboxGroups = [
     options: ["Webpage", "Application", "Video", "Book"],
   },
   {
-    label: "Include Medium(s):",
-    options: ["Watercolor", "Acrylic", "Oil", "Digital", "Pastel", "Graphite"],
-  },
-  {
     label: "Avoid Warning(s):",
     options: ["Nudity", "NSFW", "Blood/Gore", "Epilepsy"],
   },

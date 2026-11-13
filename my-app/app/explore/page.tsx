@@ -1,7 +1,9 @@
 import SearchPane from "@/components/SearchPane";
 import ResourceListing from "@/components/ResourceListing";
-import FormRowTextInput from "@/components/FormRowTextInput";
 
+const title = "Poline — Esoteric Color Palette Generation Library";
+const description =
+  "Poline is an interactive color palette generator that helps you explore and create distinctive color combinations. Adjust colors and their positions to shape a palette that fits your project.";
 const tags = [
   { name: "Color", type: "topical" },
   { name: "Palettes", type: "topical" },
@@ -9,9 +11,39 @@ const tags = [
   { name: "Web Tool", type: "medium" },
   { name: "Free", type: "price" },
 ] as const;
-const description =
-  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London.";
-const title = "Poline — Esoteric Color Palette Generation Library";
+
+const title2 = "Google Fonts";
+const description2 =
+  "Google Fonts is a library where you can browse, preview, and download open-source fonts for your projects. It makes it easy to explore different type styles and find one that fits your design.";
+const tags2 = [
+  { name: "Fonts", type: "topical" },
+  { name: "Typography", type: "topical" },
+  { name: "Web Tool", type: "medium" },
+  { name: "Free", type: "price" },
+] as const;
+
+const title3 = "Line of Action";
+const description3 =
+  "Line of Action provides timed photo references to help artists practice figure drawing, gesture, proportions, and movement.";
+const tags3 = [
+  { name: "Figure Drawing", type: "topical" },
+  { name: "Anatomy", type: "topical" },
+  { name: "Web Tool", type: "medium" },
+  { name: "Free", type: "price" },
+  { name: "Nudity", type: "warning" },
+] as const;
+
+const title4 = "Krita";
+const description4 =
+  "Krita is a free, open-source digital painting program for creating illustrations, concept art, comics, and animations.";
+const tags4 = [
+  { name: "Digital Art", type: "topical" },
+  { name: "Sketching", type: "topical" },
+  { name: "Drawing", type: "topical" },
+  { name: "Application", type: "medium" },
+  { name: "Free", type: "price" },
+] as const;
+
 
 export default function Explore({}) {
 
@@ -40,11 +72,11 @@ export default function Explore({}) {
         <SearchPane></SearchPane>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 mb-10">
         <ResourceListing title={title} description={description} tags={tags} link={"/individual-resource"}></ResourceListing>
-        <ResourceListing title={title} description={description} tags={tags} link={"/individual-resource"}></ResourceListing>
-        <ResourceListing title={title} description={description} tags={tags} link={"/individual-resource"}></ResourceListing>
-        <ResourceListing title={title} description={description} tags={tags} link={"/individual-resource"}></ResourceListing>
+        <ResourceListing title={title2} description={description2} tags={tags2} link={"/individual-resource"}></ResourceListing>
+        <ResourceListing title={title3} description={description3} tags={tags3} link={"/individual-resource"}></ResourceListing>
+        <ResourceListing title={title4} description={description4} tags={tags4} link={"/individual-resource"}></ResourceListing>
         <ResourceListing title={title} description={description} tags={tags} link={"/individual-resource"}></ResourceListing>
         <ResourceListing title={title} description={description} tags={tags} link={"/individual-resource"}></ResourceListing>
         <ResourceListing title={title} description={description} tags={tags} link={"/individual-resource"}></ResourceListing>
