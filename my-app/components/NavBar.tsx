@@ -16,7 +16,7 @@ export default function NavBar() {
             <Link className="hover:text-gray-300" href="/add-resource">Add Resource</Link>
             <Link className="hover:text-gray-300" href="/explore">Explore</Link>
             <Link className="hover:text-gray-300" href="/about">About</Link>
-            <Link className="hover:text-gray-300" href="/account">Account</Link>
+            <Link className="hover:text-gray-300" href="/account-management/login">Account</Link>
         </div>
     </nav>
   );
