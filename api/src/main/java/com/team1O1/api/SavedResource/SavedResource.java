@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(
-    name = "likes_resources"
+    name = "saved_resources"
 )
 public class SavedResource {
 
@@ -18,14 +18,19 @@ public class SavedResource {
     @Column(name = "resource_id", nullable = false, updatable = false)
     private Long resourceId;
 
+    @Column(name = "folder_id", nullable = false, updatable = false)
+    private Long folderId;
+
+    
 
     // Constructors
     public SavedResource() {
     }
 
-    public SavedResource(Long userId, Long resourceId) {
+    public SavedResource(Long userId, Long resourceId, Long folderId) {
         this.userId = userId;
         this.resourceId = resourceId;
+        this.folderId =folderId;
     }
 
     // Getters and Setters

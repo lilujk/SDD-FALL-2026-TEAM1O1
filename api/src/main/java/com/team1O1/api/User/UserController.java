@@ -1,6 +1,7 @@
 package com.team1O1.api.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.team1O1.api.SavedResource.SavedResource;
+import com.team1O1.api.SavedResource.SavedResourcedRepository;
 
 
 @RestController
@@ -22,6 +26,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SavedResourcedRepository savedRepository;
 
     private static final LocalDateTime NOW = LocalDateTime.of(2025, 11, 13, 0, 0);
 
@@ -56,6 +63,20 @@ public class UserController {
         //  return ResponseEntity.status(HttpStatus.CREATED).body("{\"Id\": 12345678, \"username\": \"JohnCola\",\"email\":\"someEmail@email.com\",\"password\":\"password\",\"bio\":\"awesome\",\"created\":\"someTime\"}");
     }
 
+    @GetMapping(path = "/folder/{id}")
+    public List<Long> getfolder(@PathVariable("id") Long id, @RequestParam("userId")Long userId)
+    {
+                return savedRepository.findByUserId(userId).stream()
+                .map(SavedResource::getResourceId)
+                .toList();
+    }
+
+    //    @GetMapping("/tags/{tagName}")
+    // public List<Long> findResourceByTag(@PathVariable("tagName") String tagName) {
+    //     return resourceRepository.findIdsWithTags(List.of(tagName)).stream()
+    //             .map(Number::longValue)
+    //             .toList();
+    // }
     // @PatchMapping(path = "/{id}", consumes = "application/json")
     // public void updatUser(@PathVariable int id){
         

@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.team1O1.api.ResourceLikes.ResourceLike;
 import com.team1O1.api.ResourceLikes.ResourceLikeRepository;
+import com.team1O1.api.SavedResource.SavedResource;
+import com.team1O1.api.SavedResource.SavedResourcedRepository;
 import com.team1O1.api.Taggings.TaggingsRepository;
 import com.team1O1.api.User.UserController.UserView;
 
@@ -46,6 +48,9 @@ public class ResourceController {
 
     @Autowired
     private ResourceLikeRepository resourceLikeRepository;
+
+    @Autowired
+    private SavedResourcedRepository savedRepository;
 
     // private static final LocalDateTime NOW = LocalDateTime.of(2025, 11, 13, 0,
     // 0);
@@ -212,14 +217,13 @@ public class ResourceController {
         resourceLikeRepository.deleteByResourceIdAndUserId(id, userId);
         return ResponseEntity.ok(resourceLikeRepository.countByResourceId(id));
     }
-    // @PostMapping("{id}/like")
-    // public ResponseEntity<String> likeResource(@PathVariable Long id,
-    // ResourceLike like) {
-    // // Optional<ResourceLike> isLike =
-    // // ResourceLikeRepository.findByResourceIdAndUserId(id, like.getuserId());
-    // return ResponseEntity.status(HttpStatus.OK).body("Resource liked");
 
-    // }
+    @PostMapping("/{id}/save")
+    public ResponseEntity<String> saveResource(@PathVariable("id") Long id, @RequestBody SavedResource resource ){
+        savedRepository.save(resource);
+        return ResponseEntity.ok("resource saved");
+        
+    }
     // Natalie - like resource
 
 }
