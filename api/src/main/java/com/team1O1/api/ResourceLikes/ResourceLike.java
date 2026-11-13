@@ -1,17 +1,15 @@
 package com.team1O1.api.ResourceLikes;
 
-
 import jakarta.persistence.*;
 
 @Entity
-@Table(
-    name = "likes_resources"
-)
+@Table(name = "likes_resources")
 public class ResourceLike {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long like_resource_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // was AUTO
+    @Column(name = "like_resource_id")
+    private Long id;
 
     @Column(name = "user_id", nullable = false, updatable = false)
     private Long userId;
@@ -19,8 +17,6 @@ public class ResourceLike {
     @Column(name = "resource_id", nullable = false, updatable = false)
     private Long resourceId;
 
-
-    // Constructors
     public ResourceLike() {
     }
 
@@ -29,21 +25,23 @@ public class ResourceLike {
         this.resourceId = resourceId;
     }
 
-    // Getters and Setters
-    public Long getuserId() {
+    public Long getId() {
+        return id;
+    }
+
+    public Long getUserId() {
         return userId;
     }
 
-    public void setuserId(Long id) {
-        this.userId = id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getResourceId() {
         return resourceId;
     }
 
-    public void setResourceId(Long id) {
-        this.resourceId = id;
+    public void setResourceId(Long resourceId) {
+        this.resourceId = resourceId;
     }
-
 }

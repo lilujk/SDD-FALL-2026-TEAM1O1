@@ -1,17 +1,26 @@
 package com.team1O1.api.ResourceLikes;
-import java.util.List;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface ResourceLikeRepository extends JpaRepository<ResourceLike, Long>  {
-      // Find a taggin by tag Id
-    List<ResourceLike> findByUserId(Long userId);
-    // Find all taggings with a specific resource ID
-    List<ResourceLike> findByResourceId(Long resourceId);
+public interface ResourceLikeRepository extends JpaRepository<ResourceLike, Long> {
 
-    @Query("select l from likes_resources l where l.resourceId = ?1 AND l.userId = ?2")
-    List<ResourceLike> findByResourceIdAndUserId(Long resourceId, Long userId);
+  // All likes by one user
+  List<ResourceLike> findByUserId(Long userId);
+
+  // All likes on one resource
+  List<ResourceLike> findByResourceId(Long resourceId);
+
+  // Has this user already liked this resource?
+  boolean existsByResourceIdAndUserId(Long resourceId, Long userId);
+
+  // Like count for a resource
+  long countByResourceId(Long resourceId);
+
+  // Unlike
+  @Transactional
+  void deleteByResourceIdAndUserId(Long resourceId, Long userId);
 }
