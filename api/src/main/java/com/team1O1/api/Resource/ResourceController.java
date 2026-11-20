@@ -25,6 +25,7 @@ import com.team1O1.api.ResourceLikes.ResourceLike;
 import com.team1O1.api.ResourceLikes.ResourceLikeRepository;
 import com.team1O1.api.SavedResource.SavedResource;
 import com.team1O1.api.SavedResource.SavedResourcedRepository;
+import com.team1O1.api.Taggings.Tagging;
 import com.team1O1.api.Taggings.TaggingsRepository;
 import com.team1O1.api.User.User;
 import com.team1O1.api.User.UserRepository;
@@ -42,8 +43,16 @@ public class ResourceController {
     private HistoryRepository historyRepository;
 
     private ResourceView toView(Resource r) {
-        return new ResourceView(r.getId(), r.getTitle(), r.getUserId(), r.getDescription(),
-                r.getLink(), Boolean.TRUE.equals(r.getApproved()), r.getAccess(), r.getCreated());
+    	List<Tagging> taggings = taggingsRepository.findByResourceId(r.getId());
+    	Long[] tagStrings = new Long[taggings.size()];
+    	int i = 0;
+    	for (Tagging t : taggings) {
+    		tagStrings[i++] = t.getTagId();
+    	}
+    	
+    	return new ResourceView(r.getId(), r.getTitle(), r.getUserId(), tagStrings,
+    		null /* warnings */, r.getAccess(), null /* mediums */, r.getDescription(),
+    		r.getLink(), null /* thumbnail */, r.getApproved().booleanValue(), r.getCreated());
     }
 
     @Autowired
@@ -65,11 +74,15 @@ public class ResourceController {
             @JsonProperty("Id") Long id,
             @JsonProperty("title") String title,
             @JsonProperty("userId") Long userId,
+            @JsonProperty("tags") Long[] tags,
+            @JsonProperty("warnings") String[] warnings,
+            @JsonProperty("free") Integer free,
+            @JsonProperty("mediums") String[] mediums,
             @JsonProperty("description") String description,
             @JsonProperty("link") String link,
+            @JsonProperty("thumbnail") String thumbnail,
             @JsonProperty("approved") boolean approved,
-            @JsonProperty("free") Integer free,
-            LocalDateTime created) {
+            @JsonProperty("created") LocalDateTime created) {
     }
 
     public record ResourceList(
@@ -93,13 +106,20 @@ public class ResourceController {
     public ResponseEntity<ResourceView> getResource(@PathVariable Long id) {
     Optional<Resource> r = resourceRepository.findById(id);
     if (r.isEmpty()) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND)
-    .body(new ResourceView(-1L, "", -1L, "", "", false, 0, LocalDateTime.now()));
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
-    ResourceView rv = new ResourceView(r.get().getId(), r.get().getTitle(),
-    r.get().getUserId(), r.get()
-    .getDescription(), r.get().getLink(), r.get().getApproved(),
-    r.get().getAccess(), r.get().getCreated());
+    Resource rsc = r.get();
+
+    List<Tagging> taggings = taggingsRepository.findByResourceId(rsc.getId());
+	Long[] tagStrings = new Long[taggings.size()];
+	int i = 0;
+	for (Tagging t : taggings) {
+		tagStrings[i++] = t.getTagId();
+	}
+
+    ResourceView rv = new ResourceView(rsc.getId(), rsc.getTitle(), rsc.getUserId(), tagStrings,
+    		null /* warnings */, rsc.getAccess(), null /* mediums */, rsc.getDescription(),
+    		rsc.getLink(), null /* thumbnail */, rsc.getApproved().booleanValue(), rsc.getCreated());
             if (r.get().getUserId() != null) {
             recordView(r.get().getUserId(), id);
         }
